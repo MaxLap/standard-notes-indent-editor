@@ -10673,12 +10673,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     editor.addOverlay({
       token: function token(stream) {
         if (stream.sol() && stream.match(/[-*+>\s]+/, true)) {
-          if (stream.eol()) {
-            // Blank line
-            return null;
-          } else {
-            return "leadingspace";
-          }
+          return "leadingspace";
         } else {
           stream.skipToEnd();
           return null;
