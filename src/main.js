@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var editor;
   var ignoreTextChange = false;
   var initialLoad = true;
+  var cachedTextWidths = {};
 
   function loadComponentManager() {
     var permissions = [{name: "stream-context-item"}]
@@ -75,6 +76,34 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
+  function cacheTextWidth(string) {
+    if (string.length == 0) {
+      return 0;
+    }
+
+    if (cachedTextWidths.hasOwnProperty(string)) {
+      return cachedTextWidths[string] || 0;
+    }
+
+    var anchor = document.createElement('span');
+    anchor.appendChild(document.createTextNode(string));
+
+    var pre = document.createElement('pre');
+    pre.className = "CodeMirror-line-like";
+    pre.appendChild(anchor);
+
+    var measure = editor.display.measure;
+    for (let count = measure.childNodes.length; count > 0; --count)
+        measure.removeChild(measure.firstChild);
+
+    measure.appendChild(pre);
+
+    var rect = anchor.getBoundingClientRect();
+    var width = (rect.right - rect.left);
+    cachedTextWidths[string] = width;
+    return width || 0;
+  }
+
   function loadEditor() {
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       mode: "indent_text",
@@ -88,13 +117,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
       save();
     });
 
-    var charWidth = editor.defaultCharWidth(), basePadding = 4;
+    var basePadding = 4;
     editor.on("renderLine", function(cm, line, elt) {
       // Show continued list/qoute lines aligned to start of text rather
       // than first non-space char.
-      var leadingSpaceListBulletsQuotes = /^\s*([*+-]\s+|\d+\.\s+|>\s*)*/;
+      var leadingSpaceListBulletsQuotes = /^[*+->\s]*/;
       var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
-      var off = CodeMirror.countColumn(leading, leading.length, cm.getOption("tabSize")) * charWidth;
+      var off = cacheTextWidth(leading);
 
       elt.style.textIndent = "-" + off + "px";
       elt.style.paddingLeft = (basePadding + off) + "px";
