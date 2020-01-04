@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     anchor.appendChild(document.createTextNode(string));
 
     var pre = document.createElement('pre');
-    pre.className = "CodeMirror-line-like";
+    pre.className = "CodeMirror-line-like cm-leadingspace";
     pre.appendChild(anchor);
 
     var measure = editor.display.measure;
@@ -112,6 +112,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
     editor.setSize("100%", "100%");
 
+    editor.addOverlay({
+      token: function(stream) {
+        if (stream.sol() && stream.match(/[-*+>\s]+/, true)) {
+          if (stream.eol()) {
+            // Blank line
+            return null
+          } else {
+            return "leadingspace";
+          }
+        } else {
+          stream.skipToEnd();
+          return null;
+        }
+      },
+      name: "leadingspace"
+    });
+
     editor.on("change", function(){
       if(ignoreTextChange) {return;}
       save();
@@ -121,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     editor.on("renderLine", function(cm, line, elt) {
       // Show continued list/qoute lines aligned to start of text rather
       // than first non-space char.
-      var leadingSpaceListBulletsQuotes = /^[*+->\s]*/;
+      var leadingSpaceListBulletsQuotes = /^[-*+>\s]*/;
       var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
       var off = cacheTextWidth(leading);
 

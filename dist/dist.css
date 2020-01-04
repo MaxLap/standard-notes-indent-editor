@@ -477,3 +477,8 @@ body, html {
 .CodeMirror .blank-line {
   line-height: 0.6em !important;
 }
+
+.cm-leadingspace {
+  font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace !important;
+  line-height: 0.1em;
+}

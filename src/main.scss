@@ -124,3 +124,9 @@ body, html {
 .CodeMirror .blank-line {
   line-height: 0.6em !important;
 }
+
+.cm-leadingspace {
+  font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace !important;
+  // that smaller line-height avoids the font-change moving text that is after up and down when it is applied/removed.
+  line-height: 0.1em;
+}
