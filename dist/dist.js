@@ -10682,7 +10682,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
         },
         'Shift-Tab': function ShiftTab(cm) {
           return cm.execCommand('indentLess');
-        }
+        },
+        "Home": "goLineLeftSmart",
+        "End": "goLineRight"
       }
     });
     editor.setSize("100%", "100%");

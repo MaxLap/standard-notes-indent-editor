@@ -122,7 +122,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                           }
                       }
                   },
-                  'Shift-Tab': (cm) => cm.execCommand('indentLess')
+                  'Shift-Tab': (cm) => cm.execCommand('indentLess'),
+                  "Home": "goLineLeftSmart",
+                  "End": "goLineRight"
                  }
     });
     editor.setSize("100%", "100%");
