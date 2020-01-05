@@ -10683,6 +10683,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
         'Shift-Tab': function ShiftTab(cm) {
           return cm.execCommand('indentLess');
         },
+        "Enter": function Enter(cm) {
+          var sels = cm.listSelections();
+
+          for (var i = sels.length - 1; i >= 0; i--) {
+            cm.replaceRange(cm.doc.lineSeparator(), sels[i].anchor, sels[i].head, "+input");
+          }
+
+          sels = cm.listSelections();
+
+          for (var i$1 = 0; i$1 < sels.length; i$1++) {
+            var prev_line = cm.doc.getLine(sels[i$1].anchor.line - 1);
+            var prev_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
+            cm.replaceRange(prev_indentation, sels[i$1].anchor, sels[i$1].head, "+input");
+          }
+
+          cm.scrollIntoView();
+        },
         "Home": "goLineLeftSmart",
         "End": "goLineRight"
       }
