@@ -149,16 +149,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var basePadding = 4;
     editor.on("renderLine", function(cm, line, elt) {
-      // Show continued list/qoute lines aligned to start of text rather
-      // than first non-space char.
       var leadingSpaceListBulletsQuotes = /^[-*+>\s]*/;
       var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
       var off = cacheTextWidth(leading);
+
+      var maxOff = cm.getScrollInfo().width - 150;
+      if (maxOff < 30) {
+        maxOff = 30;
+      }
+      if (off > maxOff) {
+        off = maxOff;
+      }
 
       elt.style.textIndent = "-" + off + "px";
       elt.style.paddingLeft = (basePadding + off) + "px";
     });
     editor.refresh();
+
+    // Need to do refresh on the codemirror instance when there is resizing
+    // This is necessary for to fix the max wrapping width in hte edge cases that it is necessary...
+    var resize_timeout_handle;
+    window.addEventListener('resize', function() {
+      // We don't want to refresh instantly, to avoid making things too slow. So we only do it once it has
+      // been 1s without resize
+      clearTimeout(resize_timeout_handle);
+      resize_timeout_handle = setTimeout(function() { editor.refresh(); }, 1000)
+    });
+
   }
 
   loadEditor();
