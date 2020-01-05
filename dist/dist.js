@@ -10665,8 +10665,24 @@ document.addEventListener("DOMContentLoaded", function (event) {
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       mode: "indent_text",
       lineWrapping: true,
+      tabSize: 2,
+      indentUnit: 2,
       extraKeys: {
-        "Alt-F": "findPersistent"
+        "Alt-F": "findPersistent",
+        Tab: function Tab(cm) {
+          if (cm.getMode().name === 'null') {
+            cm.execCommand('insertTab');
+          } else {
+            if (cm.somethingSelected()) {
+              cm.execCommand('indentMore');
+            } else {
+              cm.execCommand('insertSoftTab');
+            }
+          }
+        },
+        'Shift-Tab': function ShiftTab(cm) {
+          return cm.execCommand('indentLess');
+        }
       }
     });
     editor.setSize("100%", "100%");
