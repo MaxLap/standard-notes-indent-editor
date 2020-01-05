@@ -482,3 +482,8 @@ body, html {
   font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace !important;
   line-height: 0.1em;
 }
+
+.cm-tab {
+  text-indent: 0;
+  padding: 0;
+}
