@@ -111,18 +111,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
       tabSize: 2,
       indentUnit: 2,
       extraKeys: {"Alt-F": "findPersistent",
-                  Tab: (cm) => {
-                    if (cm.getMode().name === 'null') {
-                      cm.execCommand('insertTab');
-                    } else {
-                      if (cm.somethingSelected()) {
-                        cm.execCommand('indentMore');
-                      } else {
-                        cm.execCommand('insertSoftTab');
-                      }
-                    }
-                  },
-                  'Shift-Tab': (cm) => cm.execCommand('indentLess'),
+                  Tab: 'indentMore',
+                  'Shift-Tab': 'indentLess',
                   "Enter": (cm) => {
                     var sels = cm.listSelections();
                     for (var i = sels.length - 1; i >= 0; i--) {
