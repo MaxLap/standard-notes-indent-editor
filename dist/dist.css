@@ -475,7 +475,16 @@ body, html {
 }
 
 .CodeMirror .blank-line {
-  line-height: 0.6em !important;
+  line-height: 0.4em !important;
+}
+
+.CodeMirror {
+  font-size: 16px;
+}
+
+.CodeMirror pre.CodeMirror-line {
+  padding: 2px 0;
+  line-height: 1.2em;
 }
 
 .cm-leadingspace {
