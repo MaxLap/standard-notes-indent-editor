@@ -9,14 +9,14 @@
 "use strict";
 
 CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
-  function blankLine(state) {
+  function blankLine() {
     return 'line-blank-line';
   }
 
   var mode = {
-    token: function(stream, state) {
+    token: function(stream) {
       if (stream.match(/^\s*$/, true)) {
-        return blankLine(state);
+        return blankLine();
       }
 
       stream.skipToEnd();
