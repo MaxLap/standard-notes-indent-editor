@@ -26,7 +26,7 @@ To run the server to try out the editor:
 
 From the StandardNotes, import the extension if you didn't already. It has to be from the app because otherwise, it's a http call within a https one which is refused.
 
-    http://localhost:8080/ext.json
+    http://localhost:8080/local_ext.json
 
 To update dist/ files which are sent as editor, run:
 
