@@ -1,6 +1,6 @@
 {
-    "identifier": "org.yourdomain.textedittest",
-    "name": "Text extension",
+    "identifier": "dev.maxlap.indent_editor_local_test",
+    "name": "Indent Editor local test",
     "content_type": "SN|Component",
     "area": "editor-editor",
     "version": "1.0.0",
