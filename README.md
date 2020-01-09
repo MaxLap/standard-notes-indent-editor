@@ -1,7 +1,22 @@
-# Indent Text Editor
+### Standard Notes Indent Editor
+
+This is a text editor for the encrypted note taking web app https://standardnotes.org/.
+
+Its goal is to be a plain text editor, with just a little bit of formatting added to make it nicer to use.
+
+Compared to a basic text editor:
+
+* Pressing tab indents the line (or selected lines) with 2 spaces
+* The new line from pressing Enter copies the indentation of the previous line
+* Lines without text are half the size of a normal line (So you can add smaller spacing)
+* Lines can wrap
+* When lines wrap, they will show at the same indentation as the first line
+* Stars (*), dashes (-), greater than (>) and plus (+) that are before text are considered part of indentation. 
+  This means: lines wrap until after them and pressing Enter copies the *->+.
+* Lines that wrap are paragraph which have a smaller maximum width. This only has an impact desktop, as mobile's max length is already small enough.
 
 
-# Basic of how to dev:
+### Basic of how to dev:
 
 Clone the repo.
 
