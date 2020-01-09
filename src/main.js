@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var editor;
   var ignoreTextChange = false;
   var initialLoad = true;
-  var cachedTextWidths = {};
 
   function loadComponentManager() {
     var permissions = [{name: "stream-context-item"}]
@@ -76,21 +75,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
-  function cacheTextWidth(string) {
-    if (string.length == 0) {
-      return 0;
-    }
-
-    if (cachedTextWidths.hasOwnProperty(string)) {
-      return cachedTextWidths[string] || 0;
-    }
-
-    var anchor = document.createElement('span');
-    anchor.appendChild(document.createTextNode(string));
-
+  function measureText(indentation, text) {
     var pre = document.createElement('pre');
-    pre.className = "CodeMirror-line-like cm-leadingspace";
-    pre.appendChild(anchor);
+    pre.className = "CodeMirror-line-like";
+    var initSpan = document.createElement('span');
+    pre.appendChild(initSpan);
+
+    var indentSpan = document.createElement('span');
+    indentSpan.className = 'cm-leadingspace';
+    indentSpan.appendChild(document.createTextNode(indentation));
+    pre.appendChild(indentSpan);
+
+    pre.appendChild(document.createTextNode(text));
+
+    var finalSpan = document.createElement('span');
+    pre.appendChild(finalSpan);
 
     var measure = editor.display.measure;
     for (let count = measure.childNodes.length; count > 0; --count)
@@ -98,10 +97,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     measure.appendChild(pre);
 
-    var rect = anchor.getBoundingClientRect();
-    var width = (rect.right - rect.left);
-    cachedTextWidths[string] = width;
-    return width || 0;
+    var indentRect = indentSpan.getBoundingClientRect();
+    var indentWidth = (indentRect.right - indentRect.left);
+
+    var textMustWrap = initSpan.offsetTop < finalSpan.offsetTop;
+    return {indentWidth: indentWidth, textMustWrap: textMustWrap}
   }
 
   function loadEditor() {
@@ -152,20 +152,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var basePadding = 4;
     editor.on("renderLine", function(cm, line, elt) {
-      var leadingSpaceListBulletsQuotes = /^[-*+>\s]*/;
-      var leading = (leadingSpaceListBulletsQuotes.exec(line.text) || [""])[0];
-      var off = cacheTextWidth(leading);
+      var customIndentRegex = /^[-*+>\s]*/;
+      var indentationText = (customIndentRegex.exec(line.text) || [""])[0];
+      var text = line.text.substring(indentationText.length);
 
-      var maxOff = cm.getScrollInfo().width - 150;
+      var measures = measureText(indentationText, text);
+      var indentationWidth = measures.indentWidth;
+
+      var scrollInfo = cm.getScrollInfo();
+      var maxOff = scrollInfo.width - 150;
       if (maxOff < 30) {
         maxOff = 30;
       }
-      if (off > maxOff) {
-        off = maxOff;
+
+      var wrapOffset = indentationWidth;
+      if (wrapOffset > maxOff) {
+        wrapOffset = maxOff;
       }
 
-      elt.style.textIndent = "-" + off + "px";
-      elt.style.paddingLeft = (basePadding + off) + "px";
+      if (measures.textMustWrap) {
+        elt.className += " cm-line-is-wrapped";
+      }
+
+      elt.style.textIndent = "-" + wrapOffset + "px";
+      elt.style.paddingLeft = (basePadding + wrapOffset) + "px";
     });
     editor.refresh();
 

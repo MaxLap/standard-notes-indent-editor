@@ -496,3 +496,7 @@ body, html {
   text-indent: 0;
   padding: 0;
 }
+
+.cm-line-is-wrapped {
+  max-width: 50em;
+}
