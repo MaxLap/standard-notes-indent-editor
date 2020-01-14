@@ -2,6 +2,8 @@
 
 This is a text editor for the encrypted note taking web app https://standardnotes.org/.
 
+Online demo of the editor: https://maxlap.github.io/standard-notes-indent-editor/demo.html
+
 The goal is to be a plain text editor with just a little bit of formatting, mostly spacing, added to make it nicer to use.
 
 Compared to a basic text editor:
