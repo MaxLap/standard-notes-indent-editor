@@ -15,6 +15,11 @@ Compared to a basic text editor:
   This means: lines wrap until after them and pressing Enter copies the *->+.
 * Lines that wrap are paragraph which have a smaller maximum width. This only has an impact desktop, as mobile's max length is already small enough.
 
+### How to install
+
+In Standard Notes (either browser or desktop), click Extension, then Import Extension, paste this link: `https://listed.to/p/eUPdNELfEu`, press Enter.
+
+You should then be able to select the Indent Editor in your list of editors.
 
 ### Basic of how to dev:
 
