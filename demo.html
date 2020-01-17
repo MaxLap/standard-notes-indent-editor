@@ -16,9 +16,9 @@
     <link rel="stylesheet" media="all" href="dist/sn-codemirror-search/dialog/dialog.css">
   </head>
 
-  <body>
-    <div id="wrapper" style="border: 2px solid black; margin: 10px">
-      <textarea id="code" name="code">
+  <body style="padding: 10px; box-sizing: border-box">
+    <div id="wrapper" style="border: 2px solid black">
+      <textarea id="code" name="code" style="height: 100%">
 This is a demo of the Indent Editor for Standard Notes.
 
 You can type around and get a feel for it.
@@ -42,7 +42,35 @@ Press Shift + Tab to de-indent the current line by 2 spaces
 * You may have already noticed that lines that wrap don't go as far right as they could. This avoids paragraph that are super large and hard to read. This is based on a number of characters of width, so it has no effect on mobile. Also for that readability goal, lines that wrap have a little bit less space between the lines.
 * You can see the little extra spacing between this line and the above paragraph.
 
-This is still a work in progress, other simple features will be added to help with readability and usability.
+You can use `backticks` to have a piece of code in a line.
+
+You can use ``` triple backticks for code blocks. Put them at the end of a line (or as the only thing on the line) and code formatting will be applied until the next time a triple backticks is found at the end of a line.
+So here is some code: ```
+    function hello() {
+        console.log("Hello world");
+    }
+```
+
+  * The code will follow the indentation of the line with triple backticks: ```
+      function hello() {
+          console.log("Hello world");
+      }
+      ```
+      Or of the first line of code, whichever one is less indented:
+      ```
+    function hello() {
+      console.log("Hello world");
+      # Also of note: Empty lines have regular spacing.
+
+    }
+```
+
+This is still a work in progress:
+* Other simple features will be added to help with readability and usability
+* Some things are not final and may be improved
+* Things I'm not totally happy with right now:
+  * The spacing between lines. In some cases, I feel the lines should be closer together.
+  * The overall look of code blocks, especially for empty lines
 
 Now that you tried the editor, you can follow these instructions to install it in your Standard Notes:
   https://github.com/MaxLap/standard-notes-indent-editor#how-to-install

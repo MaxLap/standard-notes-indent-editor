@@ -388,13 +388,13 @@ body, html {
   font-size: var(--sn-stylekit-font-size-editor);
   padding: 0;
 }
-.CodeMirror .CodeMirror-code .cm-comment {
+.CodeMirror .cm-comment {
   background: var(--sn-stylekit-contrast-background-color);
   color: var(--sn-stylekit-info-color);
   font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
   font-size: 90%;
 }
-.CodeMirror .CodeMirror-code .cm-comment.CodeMirror-selectedtext {
+.CodeMirror .cm-comment.CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color) !important;
   background: var(--sn-stylekit-info-color) !important;
 }
@@ -484,12 +484,17 @@ body, html {
 
 .CodeMirror pre.CodeMirror-line {
   padding: 2px 0;
-  line-height: 1.2em;
+  line-height: 1.2;
+}
+
+.CodeMirror pre.comment-block-line {
+  padding: 0;
+  line-height: 1;
 }
 
 .cm-leadingspace {
   font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace !important;
-  line-height: 0.1em;
+  line-height: 0.1;
 }
 
 .cm-tab {
@@ -499,4 +504,8 @@ body, html {
 
 .cm-line-is-wrapped {
   max-width: 50em;
+}
+
+.cm-line-is-wrapped.comment-block-line {
+  max-width: initial;
 }

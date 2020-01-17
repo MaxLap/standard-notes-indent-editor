@@ -39,7 +39,7 @@ body, html {
   font-size: var(--sn-stylekit-font-size-editor);
   padding: 0;
 
-  .CodeMirror-code .cm-comment {
+  .cm-comment {
     background: var(--sn-stylekit-contrast-background-color);
     color: var(--sn-stylekit-info-color);
     font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
@@ -131,13 +131,18 @@ body, html {
 
 .CodeMirror pre.CodeMirror-line {
   padding: 2px 0;
-  line-height: 1.2em;
+  line-height: 1.2;
+}
+
+.CodeMirror pre.comment-block-line {
+  padding: 0;
+  line-height: 1;
 }
 
 .cm-leadingspace {
   font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace !important;
   // that smaller line-height avoids the font-change moving text that is after up and down when it is applied/removed.
-  line-height: 0.1em;
+  line-height: 0.1;
 }
 
 .cm-tab {
@@ -148,4 +153,8 @@ body, html {
 
 .cm-line-is-wrapped {
   max-width: 50em;
+}
+
+.cm-line-is-wrapped.comment-block-line {
+  max-width: initial;
 }

@@ -75,32 +75,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
-  function measureText(indentation, text) {
-    var pre = document.createElement('pre');
-    pre.className = "CodeMirror-line-like";
-    var initSpan = document.createElement('span');
-    pre.appendChild(initSpan);
-
-    var indentSpan = document.createElement('span');
-    indentSpan.className = 'cm-leadingspace';
-    indentSpan.appendChild(document.createTextNode(indentation));
-    pre.appendChild(indentSpan);
-
-    pre.appendChild(document.createTextNode(text));
+  function measureLineElement(elt) {
+    var wrappingSpan = elt.firstElementChild;
 
     var finalSpan = document.createElement('span');
-    pre.appendChild(finalSpan);
+    elt.appendChild(finalSpan);
 
-    var measure = editor.display.measure;
+    var measure = editor.display.lineMeasure;
     for (let count = measure.childNodes.length; count > 0; --count)
-        measure.removeChild(measure.firstChild);
+      measure.removeChild(measure.firstChild);
+    measure.appendChild(elt);
 
-    measure.appendChild(pre);
+    var indentWidth = 0;
+    var leadingSpaceRects = [];
+    for (var i = 0; i < wrappingSpan.childNodes.length; i++) {
+      var span = wrappingSpan.childNodes[i];
+      var wrappedClassName = ' ' + span.className + ' ';
+      if (wrappedClassName.indexOf(' cm-leadingspace ') > -1 ||
+          wrappedClassName.indexOf(' cm-comment-block-indentation ') > -1) {
+          leadingSpaceRects.push(span.getBoundingClientRect());
+      } else {
+        break;
+      }
+    }
 
-    var indentRect = indentSpan.getBoundingClientRect();
-    var indentWidth = (indentRect.right - indentRect.left);
+    if (leadingSpaceRects.length) {
+      indentWidth = (leadingSpaceRects[leadingSpaceRects.length - 1].right - leadingSpaceRects[0].left);
+    }
 
-    var textMustWrap = initSpan.offsetTop < finalSpan.offsetTop;
+    var textMustWrap = wrappingSpan.offsetTop < finalSpan.offsetTop;
+
+    measure.removeChild(elt);
+    elt.removeChild(finalSpan);
+
     return {indentWidth: indentWidth, textMustWrap: textMustWrap}
   }
 
@@ -132,19 +139,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
     editor.setSize("100%", "100%");
 
-    editor.addOverlay({
-      token: function(stream) {
-        if (stream.sol() && stream.match(/[-*+>\s]+/, true)) {
-          return "leadingspace";
-        } else {
-          stream.skipToEnd();
-          return null;
-        }
-      },
-
-      name: "leadingspace"
-    });
-
     editor.on("change", function(){
       if(ignoreTextChange) {return;}
       save();
@@ -152,11 +146,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var basePadding = 4;
     editor.on("renderLine", function(cm, line, elt) {
-      var customIndentRegex = /^[-*+>\s]*/;
-      var indentationText = (customIndentRegex.exec(line.text) || [""])[0];
-      var text = line.text.substring(indentationText.length);
-
-      var measures = measureText(indentationText, text);
+      var measures = measureLineElement(elt);
       var indentationWidth = measures.indentWidth;
 
       var scrollInfo = cm.getScrollInfo();
