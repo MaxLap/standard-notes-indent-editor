@@ -39,18 +39,6 @@ body, html {
   font-size: var(--sn-stylekit-font-size-editor);
   padding: 0;
 
-  .cm-comment {
-    background: var(--sn-stylekit-contrast-background-color);
-    color: var(--sn-stylekit-info-color);
-    font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
-    font-size: 90%; // font-family makes font look a bit big
-
-    &.CodeMirror-selectedtext {
-      color: var(--sn-stylekit-info-contrast-color) !important;
-      background: var(--sn-stylekit-info-color) !important;
-    }
-  }
-
   .cm-header {
     color: var(--sn-stylekit-editor-foreground-color);
 
@@ -60,21 +48,19 @@ body, html {
     }
   }
 
-  // Faded Markdown syntax
-  .cm-formatting-header, .cm-formatting-strong, .cm-formatting-em {
-    opacity: 0.2;
-  }
-
-  .cm-variable-2 {
-    color: var(--sn-stylekit-info-color) !important;
+  .cm-comment {
+    background: var(--sn-stylekit-contrast-background-color);
+    color: var(--sn-stylekit-info-color);
+    font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
+    font-size: 95%; // font-family makes font look a bit big
 
     &.CodeMirror-selectedtext {
       color: var(--sn-stylekit-info-contrast-color) !important;
-      background: transparent;
+      background: var(--sn-stylekit-info-color) !important;
     }
   }
 
-  .cm-link, .cm-string, .cm-keyword {
+  .cm-link {
     color: var(--sn-stylekit-info-color) !important;
 
     &.CodeMirror-selectedtext {
@@ -86,7 +72,6 @@ body, html {
   .CodeMirror-linenumber {
     color: gray !important;
   }
-
 }
 
 .CodeMirror-cursor {
@@ -108,16 +93,31 @@ body, html {
   border-color: var(--sn-stylekit-border-color) !important;
 }
 
-.cm-header-1 { font-size: 150%; }
-.cm-header-2 { font-size: 130%; }
-.cm-header-3 { font-size: 120%; }
-.cm-header-4 { font-size: 110%; }
-.cm-header-5 { font-size: 100%; }
-.cm-header-6 { font-size: 90%; }
+
+@mixin make-cm-header($number, $font-size) {
+  .cm-header-#{$number} {
+    font-weight: bold;
+    font-size: $font-size;
+  }
+
+  .cm-formatting-header-#{$number} {
+    opacity: 0.3;
+    font-size: 90%;
+    &::after {
+      content: '';
+      font-size: ($font-size / 0.9);
+    }
+  }
+}
+
+@include make-cm-header(1, 135%);
+@include make-cm-header(2, 120%);
+@include make-cm-header(3, 100%);
+@include make-cm-header(4, 100%);
 
 .CodeMirror .cm-quote {
   color: var(--sn-stylekit-foreground-color);
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 

@@ -388,16 +388,6 @@ body, html {
   font-size: var(--sn-stylekit-font-size-editor);
   padding: 0;
 }
-.CodeMirror .cm-comment {
-  background: var(--sn-stylekit-contrast-background-color);
-  color: var(--sn-stylekit-info-color);
-  font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
-  font-size: 90%;
-}
-.CodeMirror .cm-comment.CodeMirror-selectedtext {
-  color: var(--sn-stylekit-info-contrast-color) !important;
-  background: var(--sn-stylekit-info-color) !important;
-}
 .CodeMirror .cm-header {
   color: var(--sn-stylekit-editor-foreground-color);
 }
@@ -405,20 +395,20 @@ body, html {
   color: var(--sn-stylekit-info-contrast-color) !important;
   background: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .cm-formatting-header, .CodeMirror .cm-formatting-strong, .CodeMirror .cm-formatting-em {
-  opacity: 0.2;
+.CodeMirror .cm-comment {
+  background: var(--sn-stylekit-contrast-background-color);
+  color: var(--sn-stylekit-info-color);
+  font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
+  font-size: 95%;
 }
-.CodeMirror .cm-variable-2 {
-  color: var(--sn-stylekit-info-color) !important;
-}
-.CodeMirror .cm-variable-2.CodeMirror-selectedtext {
+.CodeMirror .cm-comment.CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color) !important;
-  background: transparent;
+  background: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .cm-link, .CodeMirror .cm-string, .CodeMirror .cm-keyword {
+.CodeMirror .cm-link {
   color: var(--sn-stylekit-info-color) !important;
 }
-.CodeMirror .cm-link.CodeMirror-selectedtext, .CodeMirror .cm-string.CodeMirror-selectedtext, .CodeMirror .cm-keyword.CodeMirror-selectedtext {
+.CodeMirror .cm-link.CodeMirror-selectedtext {
   color: var(--sn-stylekit-info-contrast-color) !important;
   background: var(--sn-stylekit-info-color) !important;
 }
@@ -446,32 +436,64 @@ body, html {
 }
 
 .cm-header-1 {
+  font-weight: bold;
+  font-size: 135%;
+}
+
+.cm-formatting-header-1 {
+  opacity: 0.3;
+  font-size: 90%;
+}
+.cm-formatting-header-1::after {
+  content: '';
   font-size: 150%;
 }
 
 .cm-header-2 {
-  font-size: 130%;
-}
-
-.cm-header-3 {
+  font-weight: bold;
   font-size: 120%;
 }
 
-.cm-header-4 {
-  font-size: 110%;
+.cm-formatting-header-2 {
+  opacity: 0.3;
+  font-size: 90%;
+}
+.cm-formatting-header-2::after {
+  content: '';
+  font-size: 133.3333333333%;
 }
 
-.cm-header-5 {
+.cm-header-3 {
+  font-weight: bold;
   font-size: 100%;
 }
 
-.cm-header-6 {
+.cm-formatting-header-3 {
+  opacity: 0.3;
   font-size: 90%;
+}
+.cm-formatting-header-3::after {
+  content: '';
+  font-size: 111.1111111111%;
+}
+
+.cm-header-4 {
+  font-weight: bold;
+  font-size: 100%;
+}
+
+.cm-formatting-header-4 {
+  opacity: 0.3;
+  font-size: 90%;
+}
+.cm-formatting-header-4::after {
+  content: '';
+  font-size: 111.1111111111%;
 }
 
 .CodeMirror .cm-quote {
   color: var(--sn-stylekit-foreground-color);
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 .CodeMirror .blank-line {
