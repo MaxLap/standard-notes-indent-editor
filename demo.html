@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+    <title>Indent Editor demo</title>
 
     <script src="dist/dist.js"></script>
 
@@ -17,41 +18,65 @@
   </head>
 
   <body style="padding: 10px; box-sizing: border-box">
-    <div id="wrapper" style="border: 2px solid black">
+    <div id="wrapper" style="border: 2px solid black; max-width: 1200px">
       <textarea id="code" name="code" style="height: 100%">
+# Indent editor
 This is a demo of the Indent Editor for Standard Notes.
 
 You can type around and get a feel for it.
 
-Empty lines are small, giving you more control over spacing
+A simple text editor that makes it easy to write and read nested notes.
 
-There is more space between lines compared to a basic plaintext editor
-Its minor, but helps with readability along with other features.
+# Vertical spacing
+Empty lines are small, giving you more control over spacing.
 
-Press Tab to indent the current line by 2 spaces
-Press Shift + Tab to de-indent the current line by 2 spaces
+There is a bit more space between lines compared to a basic plaintext editor.
+It's minor, but helps with readability along with other features.
 
-    These lines are indented
-    Pressing Enter copies the indentation for the new line
+# Indentation
+Press Tab to indent the current line by 2 spaces.
+Press Shift + Tab to de-indent the current line by 2 spaces.
+You can also just put spaces as you normally would.
 
-      Lines can wrap! This is a long line to show that the text will end up wrapping when it reaches the end of the screen. You may notice that the wrapped part is shown at the same indentation as the first line of the paragraph!
+  These lines are indented (There are some spaces before the text)
+  Pressing Enter copies the indentation for the new line. (Try it!)
 
-    * Stars (*), dashes (-), greater than (>) and plus (+) that are before text are considered part of indentation. So wrapped lines are indented until after them. This is great for making lists. The font for these special indentation characters is fixed-width, so things always line up.
-    * When you press enter, the * - > + that are indentation are also copied.
+  Lines can wrap! This is a long line to show that the text will end up wrapping when it reaches the end of the screen. You may notice that the wrapped part (after the line break) is shown with the same indentation as the first part.
+  For indentation, in addition to spaces, you can also use:
+  * stars
+  - dashes
+  > greather than signs
+  + plus signs
+  ->*+ As long as they are before any other text, they considered part of indentation. So wrapped lines, like this one are indented until after them. This is great for making lists. The font for these special indentation characters is fixed-width, so things always line up.
+  * When you press enter, the * - > + that are part of the indentation are also copied.
 
-* You may have already noticed that lines that wrap don't go as far right as they could. This avoids paragraph that are super large and hard to read. This is based on a number of characters of width, so it has no effect on mobile. Also for that readability goal, lines that wrap have a little bit less space between the lines.
-* You can see the little extra spacing between this line and the above paragraph.
+# Headers
+Lines that start with a number sign (#) are headers, bolder and bigger.
+They come in 3 sizes, by using up to 3 number signs
+ * # The big one! A single number sign.
+ * ## Headers can be indented, including after the usual *->+ characters!
+ * ### This one is just bold, not bigger. Thats with 3 number signs.
 
+# Paragraphs
+You may have already noticed that lines that wrap don't go as far right as they could. The lines instead stop after around 50 characters. This avoids paragraph that are super large or long line followed by very few words, both harder to read. This usually has no effect on mobile because screen aren't as large. Also for that readability goal, lines that wrap have a little bit less space between the lines.
+You can see the little extra spacing between this line and the above paragraph.
+
+# Code
 You can use `backticks` to have a piece of code in a line.
+The text will be highlighted a little using a different font (which is fixed-width).
+Additionally, other styling (such as headers) will not activate within a code or code block.
 
-You can use ``` triple backticks for code blocks. Put them at the end of a line (or as the only thing on the line) and code formatting will be applied until the next time a triple backticks is found at the end of a line.
+You can use ``` triple backticks for code blocks. Put them at the end of a line (or as the only thing on the line) and code formatting will be applied until another line ends with triple backticks.
 So here is some code: ```
     function hello() {
         console.log("Hello world");
+        # Number signs don't make headers / big text in code blocks
+        # Also of note: Empty lines have a normal height
+
     }
 ```
 
-  * The code will follow the indentation of the line with triple backticks: ```
+  * The background will start at the same indentation as the line with triple backticks: ```
       function hello() {
           console.log("Hello world");
       }
@@ -60,18 +85,21 @@ So here is some code: ```
       ```
     function hello() {
       console.log("Hello world");
-      # Also of note: Empty lines have regular spacing.
-
     }
 ```
+There is no syntax highlighting for code blocks.
+
+# Final notes
+All of this happens without modifying the text; you can always go back to a plain text file if you need to.
 
 This is still a work in progress:
-* Other simple features will be added to help with readability and usability
-* Some things are not final and may be improved
+* Other simple features will be added to help with readability and usability.
+* Some things are not final and may be improved.
 * Things I'm not totally happy with right now:
   * The spacing between lines. In some cases, I feel the lines should be closer together.
-  * The overall look of code blocks, especially for empty lines
+  * The overall look of code blocks, especially for empty lines.
 
+# Install it!
 Now that you tried the editor, you can follow these instructions to install it in your Standard Notes:
   https://github.com/MaxLap/standard-notes-indent-editor#how-to-install
 
