@@ -388,13 +388,6 @@ body, html {
   font-size: var(--sn-stylekit-font-size-editor);
   padding: 0;
 }
-.CodeMirror .cm-header {
-  color: var(--sn-stylekit-editor-foreground-color);
-}
-.CodeMirror .cm-header.CodeMirror-selectedtext {
-  color: var(--sn-stylekit-info-contrast-color) !important;
-  background: var(--sn-stylekit-info-color) !important;
-}
 .CodeMirror .cm-comment {
   background: var(--sn-stylekit-contrast-background-color);
   color: var(--sn-stylekit-info-color);
@@ -489,11 +482,6 @@ body, html {
 .cm-formatting-header-4::after {
   content: '';
   font-size: 111.1111111111%;
-}
-
-.CodeMirror .cm-quote {
-  color: var(--sn-stylekit-foreground-color);
-  opacity: 0.4;
 }
 
 .CodeMirror .blank-line {
