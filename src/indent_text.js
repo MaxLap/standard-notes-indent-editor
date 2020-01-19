@@ -2,6 +2,13 @@
 "use strict";
 
 CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
+  var linkify = require('linkify-it')({'ftp:': null, '//': null}, {fuzzyEmail: false});
+
+  // We only care about few things in the middle of text:
+  // * backticks
+  // * urls
+  // This stops only for things that could look like urls and backticks
+  var fastReadRegex = new RegExp('.*?(?:`|https?://|\\.(?:' + linkify.re.src_tlds + ')\\b)');
   /* Does a match(), but returns the matched string or ''. Expects a regex without groups. */
   function matchRegexToString(stream, regex, consume) {
     var match = stream.match(regex, consume);
@@ -56,6 +63,8 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
         codeBlockLeadingSpaceWidth: null,
         codeBlockHasReadText: false,
         headerLevel: 0,
+        stackOflinksOnLine: null,
+        foundLink: false,
       };
     },
     token: function(stream, state) {
@@ -64,6 +73,9 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
       }
 
       if (stream.sol()) {
+        if (!state.foundLink) {
+          state.stackOflinksOnLine = null;
+        }
         state.sawTextBeforeOnLine = false;
         state.headerLevel = 0;
         var leadingSpace = matchIntoLeadingSpace(stream, state, /^[-*+>\s]+/);
@@ -103,6 +115,12 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
         }
       }
 
+      if (state.foundLink) {
+        state.foundLink = false;
+        var linkInfos = state.stackOflinksOnLine.pop();
+        stream.pos = linkInfos.lastIndex;
+        return 'link' + classesAnyToken;
+      }
 
       if (!state.sawTextBeforeOnLine) {
         var signs = matchRegexToString(stream, /#+/, true);
@@ -118,13 +136,41 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
         }
       }
 
-      if (stream.match(/^[^`]+/, true)) {
+      var toInvestigate = stream.match(fastReadRegex, true);
+      if (toInvestigate) {
+        toInvestigate = toInvestigate[0];
         state.sawTextBeforeOnLine = true;
-      }
+        if (toInvestigate[toInvestigate.length - 1] == '`') {
+          stream.backUp(1);
+          state.foundBacktick = true;
+        } else {
+          if (!state.stackOflinksOnLine) {
+            var fullStringFromTokenStart = stream.string.slice(stream.start);
+            var foundLinks = linkify.match(fullStringFromTokenStart) || [];
 
-      if (!stream.eol()) {
-        // If we didn't reach the end, it's because we met a backtick!
-        state.foundBacktick = true;
+            for (var i = 0; i < foundLinks.length; i++) {
+              var match = foundLinks[i];
+              match.index += stream.start;
+              match.lastIndex += stream.start;
+            }
+            state.stackOflinksOnLine = foundLinks.reverse();
+          }
+
+          var stackOflinksOnLine = state.stackOflinksOnLine;
+          var linkToConsider;
+          while ((linkToConsider = stackOflinksOnLine[stackOflinksOnLine.length - 1])
+                 && linkToConsider.index < stream.start) {
+            // We are now father than that. Possibly because a link was inside backticks.
+            stackOflinksOnLine.pop();
+          }
+
+          if (linkToConsider && linkToConsider.index < stream.pos) {
+            stream.pos = linkToConsider.index;
+            state.foundLink = true;
+          }
+        }
+      } else {
+        stream.skipToEnd();
       }
 
       return classesAnyToken;

@@ -145,6 +145,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
       save();
     });
 
+    editor.on('mousedown', function(cm, e) {
+      if (e.ctrlKey) {
+        if ((' ' + e.target.className + ' ').includes(' cm-link ')) {
+          // We don't want to add an extra cursor in in the editor when ctrl-clicking a link
+          e.preventDefault();
+        }
+      }
+    });
+
+    editor.getWrapperElement().addEventListener('click', function(e) {
+      if (e.ctrlKey) {
+        if ((' ' + e.target.className + ' ').includes(' cm-link ')) {
+          var address = e.target.textContent;
+          if (!/^https?:\/\//.test(address)) {
+            address = "http://" + address
+          }
+
+          var newWin = window.open(undefined, '_blank');
+          // Reset the opener link
+          newWin.opener = null;
+          // Now load the correct url
+          newWin.location = address;
+          e.preventDefault();
+        }
+      }
+    });
+
     var basePadding = 4;
     editor.on("renderLine", function(cm, line, elt) {
       var measures = measureLineElement(elt);

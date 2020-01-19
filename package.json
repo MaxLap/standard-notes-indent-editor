@@ -5,7 +5,8 @@
   "main": "dist/dist.js",
   "author": "Standard Notes <hello@standardnotes.org>",
   "dependencies": {
-    "sn-codemirror-search": "1.0.0"
+    "sn-codemirror-search": "1.0.0",
+    "linkify-it": "^2.2.0"
   },
   "resolutions": {
     "**/**/node-gyp": "5.0.0"

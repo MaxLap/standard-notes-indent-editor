@@ -21,6 +21,7 @@ The [demo](https://maxlap.github.io/standard-notes-indent-editor/demo.html)shows
 * Lines that wrap are shown as paragraph of around 50 characters wide. This keeps them from being super large and hard to read
 * Lines that wrap are slightly closer together vertically.
 * Lines starting with a number sign (#) are headers, shown as bold and bigger text.
+* Things that look like web addresses are highlighted, and can be ctrl+clicked to open in a new tab.
 * You can use backticks (\`) to put code in a line, this will look similar to Markdown, but the backticks are not hidden: `` `code` `` 
 * Text between triple backticks \``` (they must be at the end of lines) is shown as a blocks of code. Again, this will look similar to Markdown, but without the box:
   ````
