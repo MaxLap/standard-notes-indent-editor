@@ -10797,6 +10797,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
       lineWrapping: true,
       tabSize: 2,
       indentUnit: 2,
+      styleSelectedText: true,
       extraKeys: {
         "Alt-F": "findPersistent",
         Tab: 'indentMore',
