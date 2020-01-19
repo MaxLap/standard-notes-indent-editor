@@ -67,7 +67,6 @@ module.exports = function(grunt) {
         src: [
           'node_modules/codemirror/lib/codemirror.js',
           'node_modules/sn-components-api/dist/dist.js',
-          'vendor/modes/indent_text/indent_text.js',
           'vendor/mark-selection.js'
         ],
         dest: 'dist/lib.js',

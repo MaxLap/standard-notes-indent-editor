@@ -10406,156 +10406,6 @@ if (window) {
   window.ComponentManager = ComponentManager;
 }
 //# sourceMappingURL=dist.js.map
-;(function(mod) {
-  if (typeof exports == "object" && typeof module == "object") // CommonJS
-    mod(require("../../lib/codemirror"), require("../xml/xml"), require("../meta"));
-  else if (typeof define == "function" && define.amd) // AMD
-    define(["../../lib/codemirror", "../xml/xml", "../meta"], mod);
-  else // Plain browser env
-    mod(CodeMirror);
-})(function(CodeMirror) {
-"use strict";
-
-CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
-  /* Does a match(), but returns the matched string or ''. Expects a regex without groups. */
-  function matchRegexToString(stream, regex, consume) {
-    var match = stream.match(regex, consume);
-    return match ? match[0] : '';
-  }
-
-  function matchIntoLeadingSpacesForCodeBlock(stream, state, max) {
-    var regex_src;
-    if (max <= 0) {
-      state.leadingSpaceContent = '';
-      return '';
-    }
-    regex_src = "^\\s{1," + state.codeBlockLeadingSpaceWidth + "}";
-    return matchIntoLeadingSpace(stream, state, new RegExp(regex_src));
-  }
-
-  function matchIntoLeadingSpace(stream, state, regex) {
-    var leadingSpace = matchRegexToString(stream, regex, true);
-    state.leadingSpaceContent = leadingSpace;
-    return leadingSpace;
-  }
-
-  function tokenInCodeBlock(stream, state) {
-    if (stream.sol()) {
-      var leadingSpace = matchIntoLeadingSpacesForCodeBlock(stream, state, state.codeBlockLeadingSpaceWidth);
-      if (!state.codeBlockHasReadText && !stream.match(/^\s*$/, false)) {
-        state.codeBlockHasReadText = true;
-        state.codeBlockLeadingSpaceWidth = leadingSpace.length;
-      }
-      if (leadingSpace) {
-        return "leadingspace line-comment-block-line";
-      }
-    }
-
-    if (stream.match(/^.*```\s*$/, true)) {
-      state.inCodeBlock = false;
-    } else if (stream.match(/^\s+/, true)) {
-      return 'comment line-comment-block-line comment-block-indentation';
-    } else {
-      stream.skipToEnd();
-    }
-    return 'comment line-comment-block-line';
-  }
-
-  var mode = {
-    startState: function() {
-      return {
-        foundBacktick: false,
-        leadingSpaceContent: null,
-        sawTextBeforeOnLine: false,
-        inCodeBlock: false,
-        codeBlockLeadingSpaceWidth: null,
-        codeBlockHasReadText: false,
-        headerLevel: 0,
-      };
-    },
-    token: function(stream, state) {
-      if (state.inCodeBlock) {
-        return tokenInCodeBlock(stream, state);
-      }
-
-      if (stream.sol()) {
-        state.sawTextBeforeOnLine = false;
-        state.headerLevel = 0;
-        var leadingSpace = matchIntoLeadingSpace(stream, state, /^[-*+>\s]+/);
-        if (leadingSpace) {
-          if (stream.eol() && leadingSpace.match(/^\s*$/)) {
-            return "leadingspace line-blank-line";
-          } else {
-            state.prevTokenOfLineWasLeadingSpace = true;
-            return "leadingspace";
-          }
-        }
-      }
-
-      var classesAnyToken = '';
-
-      if (state.headerLevel > 0) {
-        classesAnyToken += ' header-' + state.headerLevel;
-      }
-
-      if (state.foundBacktick) {
-        state.foundBacktick = false;
-        if (stream.match(/^```\s*$/, true)) {
-          state.inCodeBlock = true;
-          state.codeBlockHasReadText = false;
-          state.codeBlockLeadingSpaceWidth = state.leadingSpaceContent.length;
-          if (state.sawTextBeforeOnLine) {
-            return 'comment' + classesAnyToken;
-          } else {
-            return 'comment line-comment-block-line' + classesAnyToken;
-          }
-        }
-        if (stream.match(/^`[^`]+`/, true)) {
-          return 'comment' + classesAnyToken;
-        } else {
-          stream.eat('`');
-          return classesAnyToken;
-        }
-      }
-
-
-      if (!state.sawTextBeforeOnLine) {
-        var signs = matchRegexToString(stream, /#+/, true);
-        if (signs) {
-          // We got the start of a header!
-          state.headerLevel = signs.length;
-          if (state.headerLevel < 1) {
-            state.headerLevel = 1;
-          } else if (state.headerLevel > 4) {
-            state.headerLevel = 4;
-          }
-          return 'formatting-header-' + state.headerLevel;
-        }
-      }
-
-      if (stream.match(/^[^`]+/, true)) {
-        state.sawTextBeforeOnLine = true;
-      }
-
-      if (!stream.eol()) {
-        // If we didn't reach the end, it's because we met a backtick!
-        state.foundBacktick = true;
-      }
-
-      return classesAnyToken;
-    },
-
-    blankLine: function(state) {
-      if (state.inCodeBlock) {
-        return 'line-comment-block-line';
-      } else {
-        return 'line-blank-line';
-      }
-    }
-  };
-  return mode;
-}, "xml");
-});
 ;// CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
@@ -10678,6 +10528,161 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
 ;(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
+(function (CodeMirror) {
+  "use strict";
+
+  CodeMirror.defineMode("indent_text", function (cmCfg, modeCfg) {
+    /* Does a match(), but returns the matched string or ''. Expects a regex without groups. */
+    function matchRegexToString(stream, regex, consume) {
+      var match = stream.match(regex, consume);
+      return match ? match[0] : '';
+    }
+
+    function matchIntoLeadingSpacesForCodeBlock(stream, state, max) {
+      var regex_src;
+
+      if (max <= 0) {
+        state.leadingSpaceContent = '';
+        return '';
+      }
+
+      regex_src = "^\\s{1," + state.codeBlockLeadingSpaceWidth + "}";
+      return matchIntoLeadingSpace(stream, state, new RegExp(regex_src));
+    }
+
+    function matchIntoLeadingSpace(stream, state, regex) {
+      var leadingSpace = matchRegexToString(stream, regex, true);
+      state.leadingSpaceContent = leadingSpace;
+      return leadingSpace;
+    }
+
+    function tokenInCodeBlock(stream, state) {
+      if (stream.sol()) {
+        var leadingSpace = matchIntoLeadingSpacesForCodeBlock(stream, state, state.codeBlockLeadingSpaceWidth);
+
+        if (!state.codeBlockHasReadText && !stream.match(/^\s*$/, false)) {
+          state.codeBlockHasReadText = true;
+          state.codeBlockLeadingSpaceWidth = leadingSpace.length;
+        }
+
+        if (leadingSpace) {
+          return "leadingspace line-comment-block-line";
+        }
+      }
+
+      if (stream.match(/^.*```\s*$/, true)) {
+        state.inCodeBlock = false;
+      } else if (stream.match(/^\s+/, true)) {
+        return 'comment line-comment-block-line comment-block-indentation';
+      } else {
+        stream.skipToEnd();
+      }
+
+      return 'comment line-comment-block-line';
+    }
+
+    var mode = {
+      startState: function startState() {
+        return {
+          foundBacktick: false,
+          leadingSpaceContent: null,
+          sawTextBeforeOnLine: false,
+          inCodeBlock: false,
+          codeBlockLeadingSpaceWidth: null,
+          codeBlockHasReadText: false,
+          headerLevel: 0
+        };
+      },
+      token: function token(stream, state) {
+        if (state.inCodeBlock) {
+          return tokenInCodeBlock(stream, state);
+        }
+
+        if (stream.sol()) {
+          state.sawTextBeforeOnLine = false;
+          state.headerLevel = 0;
+          var leadingSpace = matchIntoLeadingSpace(stream, state, /^[-*+>\s]+/);
+
+          if (leadingSpace) {
+            if (stream.eol() && leadingSpace.match(/^\s*$/)) {
+              return "leadingspace line-blank-line";
+            } else {
+              state.prevTokenOfLineWasLeadingSpace = true;
+              return "leadingspace";
+            }
+          }
+        }
+
+        var classesAnyToken = '';
+
+        if (state.headerLevel > 0) {
+          classesAnyToken += ' header-' + state.headerLevel;
+        }
+
+        if (state.foundBacktick) {
+          state.foundBacktick = false;
+
+          if (stream.match(/^```\s*$/, true)) {
+            state.inCodeBlock = true;
+            state.codeBlockHasReadText = false;
+            state.codeBlockLeadingSpaceWidth = state.leadingSpaceContent.length;
+
+            if (state.sawTextBeforeOnLine) {
+              return 'comment' + classesAnyToken;
+            } else {
+              return 'comment line-comment-block-line' + classesAnyToken;
+            }
+          }
+
+          if (stream.match(/^`[^`]+`/, true)) {
+            return 'comment' + classesAnyToken;
+          } else {
+            stream.eat('`');
+            return classesAnyToken;
+          }
+        }
+
+        if (!state.sawTextBeforeOnLine) {
+          var signs = matchRegexToString(stream, /#+/, true);
+
+          if (signs) {
+            // We got the start of a header!
+            state.headerLevel = signs.length;
+
+            if (state.headerLevel < 1) {
+              state.headerLevel = 1;
+            } else if (state.headerLevel > 4) {
+              state.headerLevel = 4;
+            }
+
+            return 'formatting-header-' + state.headerLevel;
+          }
+        }
+
+        if (stream.match(/^[^`]+/, true)) {
+          state.sawTextBeforeOnLine = true;
+        }
+
+        if (!stream.eol()) {
+          // If we didn't reach the end, it's because we met a backtick!
+          state.foundBacktick = true;
+        }
+
+        return classesAnyToken;
+      },
+      blankLine: function blankLine(state) {
+        if (state.inCodeBlock) {
+          return 'line-comment-block-line';
+        } else {
+          return 'line-blank-line';
+        }
+      }
+    };
+    return mode;
+  }, "xml");
+})(CodeMirror);
+
+;
 document.addEventListener("DOMContentLoaded", function (event) {
   var componentManager;
   var workingNote, clientData;
