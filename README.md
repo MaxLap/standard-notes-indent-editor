@@ -53,17 +53,31 @@ This means:
 
 Clone the repo.
 
+Install the dependencies:
+
+    npm install
+
 To run the server to try out the editor:
 
     python3 -m http.server 8080
-
-From the StandardNotes, import the extension if you didn't already. It has to be from the app because otherwise, it's a http call within a https one which is refused.
-
-    http://localhost:8080/local_ext.json
 
 To update dist/ files which are sent as editor, run:
 
     grunt
 
-To refresh your editor with the modified version, the way that always work is to open the Chrome console, then right-click the refresh icon and do a "Empty cash and hard reload".
+You can use the demo to just try out the editor:
+
+    http://localhost:8080/demo.html
+
+To refresh your editor with the modified version, the way that always work is to open the Chrome console, then right-click the refresh icon and do a "Empty cache and hard reload". Other ways of doing hard refreshes may work, but the cache clearing has sometimes been necessary for me.
+
+You can also try it in StandardNotes (but it's more painful to do so):
+
+Import the local test extension if you didn't already. Do it from the desktop app because otherwise, it's a http call within a https one which is refused by your browser. This is the link to the extension:
+
+    http://localhost:8080/local_ext.json
+
+Once the app is imported, you can test it from:
+* the browser app: It's possible it wont work until you allow Mixed Content in the page page. Search online for how to enable it for your browser.
+* the desktop app. I have no idea how often the desktop will refresh the extensions, so that may be painful except as last validation.
 
