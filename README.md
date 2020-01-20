@@ -6,7 +6,7 @@ A simple text editor that makes it easy to write and read nested notes.
 
 Online demo with explanations: https://maxlap.github.io/standard-notes-indent-editor/demo.html
 
-The [demo](https://maxlap.github.io/standard-notes-indent-editor/demo.html)shows everything nicely, but compared to a basic text editor:
+The [demo](https://maxlap.github.io/standard-notes-indent-editor/demo.html) shows everything nicely, but compared to a basic text editor:
 
 * Press `Tab` to indent the line (or selected lines) with 2 spaces (even if in the middle of the line).
 * Press `Shift` + `Tab` removes 2 spaces from the beginning of line (or selected lines).
