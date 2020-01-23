@@ -1,3 +1,5 @@
+$comment-font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
+
 body, html {
   font-family: sans-serif;
   font-size: var(--sn-stylekit-base-font-size);
@@ -42,7 +44,7 @@ body, html {
   .cm-comment {
     background: var(--sn-stylekit-contrast-background-color);
     color: var(--sn-stylekit-info-color);
-    font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
+    font-family: $comment-font-family;
     font-size: 95%; // font-family makes font look a bit big
 
     &.CodeMirror-selectedtext {
@@ -121,7 +123,8 @@ body, html {
 
 .CodeMirror pre.comment-block-line {
   padding: 0;
-  line-height: 1;
+  line-height: normal;
+  font-family: $comment-font-family;
 }
 
 .cm-leadingspace {

@@ -499,7 +499,8 @@ body, html {
 
 .CodeMirror pre.comment-block-line {
   padding: 0;
-  line-height: 1;
+  line-height: normal;
+  font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
 }
 
 .cm-leadingspace {
