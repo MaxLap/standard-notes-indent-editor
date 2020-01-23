@@ -112,6 +112,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
   }
 
   function loadEditor() {
+    function duplicateLine(cm) {
+      var current_cursor = cm.doc.getCursor();
+      var line_content = cm.doc.getLine(current_cursor.line);
+      CodeMirror.commands.goLineEnd(cm);
+      CodeMirror.commands.newlineAndIndent(cm);
+      CodeMirror.commands.goLineLeft(cm);
+      cm.doc.replaceSelection(line_content);
+      cm.doc.setCursor(current_cursor.line + 1, current_cursor.ch);
+    }
+
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       mode: "indent_text",
       lineWrapping: true,
@@ -149,7 +159,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     cm.scrollIntoView();
                   },
                   "Home": "goLineLeftSmart",
-                  "End": "goLineRight"
+                  "End": "goLineRight",
+                  "Ctrl-D": duplicateLine,
+                  "Cmd-D": duplicateLine,
                  }
     });
     editor.setSize("100%", "100%");
