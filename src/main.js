@@ -123,14 +123,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
                   'Shift-Tab': 'indentLess',
                   "Enter": (cm) => {
                     var sels = cm.listSelections();
+                    var tokens = [];
                     for (var i = sels.length - 1; i >= 0; i--) {
+                      tokens.push(cm.getTokenAt(sels[i].anchor, true));
                       cm.replaceRange(cm.doc.lineSeparator(), sels[i].anchor, sels[i].head, "+input");
                     }
+
                     sels = cm.listSelections();
-                    for (var i$1 = 0; i$1 < sels.length; i$1++) {
-                      var prev_line = cm.doc.getLine(sels[i$1].anchor.line - 1);
-                      var prev_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
-                      cm.replaceRange(prev_indentation, sels[i$1].anchor, sels[i$1].head, "+input");
+                    for (var i = 0; i < sels.length; i++) {
+                      var state = tokens[i].state;
+                      var prev_line = cm.doc.getLine(sels[i].anchor.line - 1);
+                      if (state.inCodeBlock) {
+                        var prev_indentation;
+                        if (state.codeBlockHasReadText) {
+                          prev_indentation = /^\s*/.exec(prev_line)[0];
+                        } else {
+                          prev_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
+                          prev_indentation = prev_indentation.replace(/[-*+>]/g, ' ');
+                        }
+                      } else {
+                        prev_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
+                      }
+                      cm.replaceRange(prev_indentation, sels[i].anchor, sels[i].head, "+input");
                     }
                     cm.scrollIntoView();
                   },
