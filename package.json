@@ -1,9 +1,9 @@
 {
-  "name": "sn-minimal-markdown-editor",
-  "version": "1.3.3",
+  "name": "standard-notes-indent-editor",
+  "version": "1.4.0",
   "description": "",
   "main": "dist/dist.js",
-  "author": "Standard Notes <hello@standardnotes.org>",
+  "author": "Maxime Lapointe <maxhlap@gmail.com>",
   "dependencies": {
     "sn-codemirror-search": "1.0.0",
     "linkify-it": "^2.2.0"
