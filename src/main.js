@@ -113,6 +113,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function loadEditor() {
 
+    function selectionsToLineRanges(sels) {
+      var lineRanges = [];
+      for (var i = 0; i < sels.length; i++) {
+        var anchor = sels[i].anchor;
+        var head = sels[i].head;
+        var startLine, endLine;
+        if (anchor.line < head.line) {
+          startLine = anchor.line;
+          endLine = head.line;
+        } else {
+          startLine = head.line;
+          endLine = anchor.line;
+        }
+
+        var lastPair = lineRanges[lineRanges.length - 1];
+        if (lastPair && lastPair[1] + 1 >= startLine) {
+          // The last pair ends on the line before this selection. We just group them together
+          lastPair[1] = endLine;
+        } else {
+          lineRanges.push([startLine, endLine])
+        }
+      }
+      return lineRanges;
+    }
+
     function duplicate(cm) {
       var sels = cm.listSelections();
       for (var i = sels.length - 1; i >= 0; i--) {
@@ -138,6 +163,103 @@ document.addEventListener("DOMContentLoaded", function(event) {
           cm.replaceRange(content, start, start, "+input");
         }
       }
+    }
+
+    function moveSelectedLinesUp(cm) {
+      var sels = cm.listSelections();
+      var lineRanges = selectionsToLineRanges(sels);
+      var nbSelsTouchingFirstLine = 0;
+
+      if (lineRanges[0][0] == 0) {
+        var lastLineTouchingFirstLine = lineRanges[0][1];
+
+        for (var i = 0; i < sels.length; i++) {
+          var anchor = sels[i].anchor;
+          var head = sels[i].head;
+          if (anchor.line <= lastLineTouchingFirstLine || head.line <= lastLineTouchingFirstLine) {
+            nbSelsTouchingFirstLine += 1;
+          } else {
+            break;
+          }
+        }
+      }
+
+      for (var i = 0; i < lineRanges.length; i++) {
+        var lineRange = lineRanges[i];
+        var startLine = lineRange[0];
+        var endLine = lineRange[1];
+
+        if (startLine == 0) {
+          // This contains the first line of the file. Nothing to do!
+          continue;
+        }
+
+        var prevLineContent = cm.doc.getLine(startLine - 1);
+        var chOfEndLine = cm.doc.getLine(endLine).length;
+        cm.replaceRange(cm.doc.lineSeparator() + prevLineContent, {line: endLine, ch: chOfEndLine}, {line: endLine, ch: chOfEndLine}, "+input");
+        cm.replaceRange('', {line: startLine - 1, ch: 0}, {line: startLine, ch: 0}, "+input");
+      }
+
+      var newSels = []
+      for (var i = 0; i < nbSelsTouchingFirstLine; i++) {
+        newSels.push(sels[i]);
+      }
+      for (var i = nbSelsTouchingFirstLine; i < sels.length; i++) {
+        var anchor = sels[i].anchor;
+        var head = sels[i].head;
+        newSels.push({anchor: {line: anchor.line - 1, ch: anchor.ch}, head: {line: head.line - 1, ch: head.ch}});
+      }
+      cm.doc.setSelections(newSels);
+    }
+
+    function moveSelectedLinesDown(cm) {
+      var sels = cm.listSelections();
+      var lineRanges = selectionsToLineRanges(sels);
+      var nbSelsTouchingLastLine = 0;
+      var lastLineNumber = cm.doc.lastLine();
+
+      if (lineRanges[lineRanges.length - 1][1] == lastLineNumber) {
+        var firstLineTouchingLastLine = lineRanges[lineRanges.length - 1][0];
+
+        for (var i = sels.length - 1; i >= 0; i--) {
+          var anchor = sels[i].anchor;
+          var head = sels[i].head;
+          if (anchor.line >= firstLineTouchingLastLine || head.line >= firstLineTouchingLastLine) {
+            nbSelsTouchingLastLine += 1;
+          } else {
+            break;
+          }
+        }
+      }
+
+      for (var i = 0; i < lineRanges.length; i++) {
+        var lineRange = lineRanges[i];
+        var startLine = lineRange[0];
+        var endLine = lineRange[1];
+
+        if (endLine == lastLineNumber) {
+          // This contains the last line of the file. Nothing to do!
+          continue;
+        }
+
+        var nextLineContent = cm.doc.getLine(endLine + 1);
+        cm.replaceRange('', {line: endLine, ch: cm.doc.getLine(endLine).length},
+                            {line: endLine + 1, ch: cm.doc.getLine(endLine + 1).length}, "+input");
+        cm.replaceRange(nextLineContent + cm.doc.lineSeparator(), {line: startLine, ch: 0}, {line: startLine, ch: 0}, "+input");
+      }
+
+      var newSels = [];
+      var nbLineRangetochange = sels.length - nbSelsTouchingLastLine;
+      console.log(nbLineRangetochange);
+      for (var i = 0; i < nbLineRangetochange; i++) {
+        var anchor = sels[i].anchor;
+        var head = sels[i].head;
+        newSels.push({anchor: {line: anchor.line + 1, ch: anchor.ch}, head: {line: head.line + 1, ch: head.ch}});
+      }
+      for (var i = nbLineRangetochange; i < sels.length; i++) {
+        newSels.push(sels[i]);
+      }
+      cm.doc.setSelections(newSels);
     }
 
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -180,6 +302,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
                   "End": "goLineRight",
                   "Ctrl-D": duplicate,
                   "Cmd-D": duplicate,
+                  // Shift has to be first for some reason...
+                  "Shift-Ctrl-Up": moveSelectedLinesUp,
+                  "Shift-Cmd-Up": moveSelectedLinesUp,
+                  "Shift-Ctrl-Down": moveSelectedLinesDown,
+                  "Shift-Cmd-Down": moveSelectedLinesDown,
                  }
     });
     editor.setSize("100%", "100%");
