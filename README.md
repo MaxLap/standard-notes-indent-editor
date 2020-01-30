@@ -31,6 +31,8 @@ The [demo](https://maxlap.github.io/standard-notes-indent-editor/demo.html) show
   }
   ```
   ````
+* Pressing `Ctrl` + `D` duplicates the selection or the current line if no selection.
+* Pressing `Ctrl` + `Shift` + `Up` and `Ctrl` + `Shift` + `Down` will move the selected lines up and down.
 
 ### How to install
 
