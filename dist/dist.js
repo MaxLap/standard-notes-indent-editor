@@ -10854,14 +10854,40 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 
   function loadEditor() {
-    function duplicateLine(cm) {
-      var current_cursor = cm.doc.getCursor();
-      var line_content = cm.doc.getLine(current_cursor.line);
-      CodeMirror.commands.goLineEnd(cm);
-      CodeMirror.commands.newlineAndIndent(cm);
-      CodeMirror.commands.goLineLeft(cm);
-      cm.doc.replaceSelection(line_content);
-      cm.doc.setCursor(current_cursor.line + 1, current_cursor.ch);
+    function duplicate(cm) {
+      var sels = cm.listSelections();
+
+      for (var i = sels.length - 1; i >= 0; i--) {
+        var anchor = sels[i].anchor;
+        var head = sels[i].head;
+
+        if (anchor.line == head.line && anchor.ch == head.ch) {
+          // Nothing hightlighted, so copy whole line
+          var line = anchor.line;
+          var lineContent = cm.doc.getLine(line);
+          cm.replaceRange(lineContent + cm.doc.lineSeparator(), {
+            line: line,
+            ch: 0
+          }, {
+            line: line,
+            ch: 0
+          }, "+input");
+        } else {
+          // If something is highlighted, only copy that
+          var start, end;
+
+          if (anchor.line < head.line || anchor.line == head.line && anchor.ch < head.ch) {
+            start = anchor;
+            end = head;
+          } else {
+            start = head;
+            end = anchor;
+          }
+
+          var content = cm.doc.getRange(start, end);
+          cm.replaceRange(content, start, start, "+input");
+        }
+      }
     }
 
     editor = CodeMirror.fromTextArea(document.getElementById("code"), {
@@ -10909,8 +10935,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
         },
         "Home": "goLineLeftSmart",
         "End": "goLineRight",
-        "Ctrl-D": duplicateLine,
-        "Cmd-D": duplicateLine
+        "Ctrl-D": duplicate,
+        "Cmd-D": duplicate
       }
     });
     editor.setSize("100%", "100%");
