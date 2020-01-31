@@ -3,5 +3,6 @@
 * In standard notes's extension file:
   * Update the "version"
   * Update the "download_url" with new archive's (from github) path
-  * update the "url" with the latest commit hash
   * Update the private post to release
+* Update the current_release branch with content of master:  
+  `git checkout current_release; git reset --hard master; git push; git checkout master`
