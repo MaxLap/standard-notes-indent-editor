@@ -1,7 +1,7 @@
-$comment-font-family: Consolas, monaco, "Ubuntu Mono", courier, monospace !important;
+$comment-font-family: var(--sn-stylekit-monospace-font) !important;
 
 body, html {
-  font-family: sans-serif;
+  font-family: var(--sn-stylekit-sans-serif-font);
   font-size: var(--sn-stylekit-base-font-size);
   height: 100%;
   margin: 0;
@@ -30,7 +30,7 @@ body, html {
   background-color: var(--sn-stylekit-editor-background-color) !important;
   color: var(--sn-stylekit-editor-foreground-color) !important;
   border: 0 !important;
-  font-family: sans-serif;
+  font-family: var(--sn-stylekit-sans-serif-font);
 
   -webkit-overflow-scrolling: touch;
 
@@ -128,7 +128,7 @@ body, html {
 }
 
 .cm-leadingspace {
-  font-family: "Courier 10 Pitch", "Nimbus Mono L", "Courier New", "Courier", "FreeMono", monospace !important;
+  font-family: var(--sn-stylekit-monospace-font) !important;
   // that smaller line-height avoids the font-change moving text that is after up and down when it is applied/removed.
   line-height: 0.1;
 }
