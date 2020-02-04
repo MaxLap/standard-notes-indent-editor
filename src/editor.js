@@ -249,15 +249,26 @@ function IndentEditor(target_textarea) {
       if (e.ctrlKey) {
         if ((' ' + e.target.className + ' ').includes(' cm-link ')) {
           var address = e.target.textContent;
+
           if (!/^https?:\/\//.test(address)) {
-            address = "http://" + address
+            address = "http://" + address;
           }
 
-          var newWin = window.open(undefined, '_blank');
-          // Reset the opener link
-          newWin.opener = null;
-          // Now load the correct url
-          newWin.location = address;
+          var userAgent = navigator.userAgent.toLowerCase();
+          if (userAgent.indexOf(' electron/') > -1) {
+            // Desktop (Electron)
+            window.open(address);
+          } else if (typeof navigator != 'undefined' && navigator.product == 'ReactNative') {
+            // Android / iOS
+            window.open(address);
+          } else {
+            // Browser. This is a old browser compatible way of making sure the target cannot
+            var newWin = window.open(undefined, '_blank'); // Reset the opener link
+
+            newWin.opener = null; // Now load the correct url
+
+            newWin.location = address;
+          }
           e.preventDefault();
         }
       }
