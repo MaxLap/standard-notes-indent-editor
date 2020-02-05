@@ -237,7 +237,7 @@ function IndentEditor(target_textarea) {
     editor.setSize("100%", "100%");
 
     editor.on('mousedown', function(cm, e) {
-      if (e.ctrlKey) {
+      if (e.ctrlKey || e.metaKey) {
         if ((' ' + e.target.className + ' ').includes(' cm-link ')) {
           // We don't want to add an extra cursor in in the editor when ctrl-clicking a link
           e.preventDefault();
@@ -246,7 +246,7 @@ function IndentEditor(target_textarea) {
     });
 
     editor.getWrapperElement().addEventListener('click', function(e) {
-      if (e.ctrlKey) {
+      if (e.ctrlKey || e.metaKey) {
         if ((' ' + e.target.className + ' ').includes(' cm-link ')) {
           var address = e.target.textContent;
 
