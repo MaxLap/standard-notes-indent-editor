@@ -504,7 +504,7 @@ body, html {
 }
 
 .cm-leadingspace {
-  font-family: var(--sn-stylekit-monospace-font) !important;
+  font-family: var(--sn-stylekit-monospace-font);
   line-height: 0.1;
 }
 

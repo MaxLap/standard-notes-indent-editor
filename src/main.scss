@@ -128,7 +128,7 @@ body, html {
 }
 
 .cm-leadingspace {
-  font-family: var(--sn-stylekit-monospace-font) !important;
+  font-family: var(--sn-stylekit-monospace-font);
   // that smaller line-height avoids the font-change moving text that is after up and down when it is applied/removed.
   line-height: 0.1;
 }
