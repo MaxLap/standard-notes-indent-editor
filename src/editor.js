@@ -191,6 +191,8 @@ function IndentEditor(target_textarea) {
       mode: "indent_text",
       lineWrapping: true,
       tabSize: 2,
+      inputStyle: 'contenteditable',
+      spellcheck: true,
       indentUnit: 2,
       extraKeys: {"Alt-F": "findPersistent",
         Tab: 'indentMore',
