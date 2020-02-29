@@ -52,6 +52,10 @@ This means:
 * See your text: Every character is displayed, nothing is hidden.
 * Not locked in: The text will look fine in any other editor, you wouldn't lose anything.
 
+### Supporting the editor
+
+If you enjoy the editor, please consider hitting the sponsor button at the top of the page to encourage my work.
+
 ### Basic of how to dev:
 
 Clone the repo.
