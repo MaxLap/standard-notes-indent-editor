@@ -15,9 +15,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
       if (platform) {
         document.body.classList.add(platform);
       }
-
-      // only use CodeMirror selection color if we're not on mobile.
-      editor.setOption("styleSelectedText", !componentManager.isMobile);
     });
 
     componentManager.streamContextItem((note) => {

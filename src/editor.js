@@ -192,7 +192,6 @@ function IndentEditor(target_textarea) {
       lineWrapping: true,
       tabSize: 2,
       indentUnit: 2,
-      styleSelectedText: true,
       extraKeys: {"Alt-F": "findPersistent",
         Tab: 'indentMore',
         'Shift-Tab': 'indentLess',
@@ -234,6 +233,9 @@ function IndentEditor(target_textarea) {
         "Shift-Cmd-Down": moveSelectedLinesDown,
       }
     });
+    // only use CodeMirror markselection when not in contenteditable
+    editor.setOption("styleSelectedText", editor.getOption('inputStyle') != 'contenteditable');
+
     editor.setSize("100%", "100%");
 
     editor.on('mousedown', function(cm, e) {

@@ -413,15 +413,6 @@ body, html {
   border-color: var(--sn-stylekit-editor-foreground-color);
 }
 
-.CodeMirror-selected {
-  background: var(--sn-stylekit-info-color) !important;
-}
-
-.CodeMirror-selectedtext {
-  color: var(--sn-stylekit-info-contrast-color) !important;
-  background: var(--sn-stylekit-info-color) !important;
-}
-
 .CodeMirror-gutters {
   background-color: var(--sn-stylekit-background-color) !important;
   color: var(--sn-stylekit-editor-foreground-color) !important;
@@ -519,4 +510,23 @@ body, html {
 
 .cm-line-is-wrapped.comment-block-line {
   max-width: initial;
+}
+
+.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection {
+  background: var(--sn-stylekit-info-color);
+  color: var(--sn-stylekit-info-contrast-color);
+}
+
+.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection {
+  background: var(--sn-stylekit-info-color);
+  color: var(--sn-stylekit-info-contrast-color);
+}
+
+.CodeMirror-selected {
+  background: var(--sn-stylekit-info-color) !important;
+}
+
+.CodeMirror-selectedtext {
+  color: var(--sn-stylekit-info-contrast-color) !important;
+  background: var(--sn-stylekit-info-color) !important;
 }

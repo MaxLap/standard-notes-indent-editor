@@ -10785,7 +10785,6 @@ function IndentEditor(target_textarea) {
       lineWrapping: true,
       tabSize: 2,
       indentUnit: 2,
-      styleSelectedText: true,
       extraKeys: {
         "Alt-F": "findPersistent",
         Tab: 'indentMore',
@@ -10833,7 +10832,9 @@ function IndentEditor(target_textarea) {
         "Shift-Ctrl-Down": moveSelectedLinesDown,
         "Shift-Cmd-Down": moveSelectedLinesDown
       }
-    });
+    }); // only use CodeMirror markselection when not in contenteditable
+
+    editor.setOption("styleSelectedText", editor.getOption('inputStyle') != 'contenteditable');
     editor.setSize("100%", "100%");
     editor.on('mousedown', function (cm, e) {
       if (e.ctrlKey || e.metaKey) {
@@ -11148,10 +11149,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
       if (platform) {
         document.body.classList.add(platform);
-      } // only use CodeMirror selection color if we're not on mobile.
-
-
-      editor.setOption("styleSelectedText", !componentManager.isMobile);
+      }
     });
     componentManager.streamContextItem(function (note) {
       onReceivedNote(note);
