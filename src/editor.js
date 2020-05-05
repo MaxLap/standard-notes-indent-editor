@@ -216,7 +216,11 @@ function IndentEditor(target_textarea) {
                 prev_indentation = prev_indentation.replace(/[-*+>]/g, ' ');
               }
             } else {
-              prev_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
+              var digits = /^\s*(\d+)\.\s+/.exec(prev_line);
+              if (digits) {
+                prev_line = prev_line.replace(/\d+/, parseInt(digits,10) + 1);
+              }
+              prev_indentation = /^\s*(\d+)\.\s+|[-*+>\s]*/.exec(prev_line)[0];
             }
             cm.replaceRange(prev_indentation, sels[i].anchor, sels[i].head, "+input");
           }

@@ -78,7 +78,7 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
         }
         state.sawTextBeforeOnLine = false;
         state.headerLevel = 0;
-        var leadingSpace = matchIntoLeadingSpace(stream, state, /^[-*+>\s]+/);
+        var leadingSpace = matchIntoLeadingSpace(stream, state, /^(\s*\d+\.\s+|[-*+>\s]+)/);
         if (leadingSpace) {
           if (stream.eol() && /^\s*$/.test(leadingSpace)) {
             return "leadingspace line-blank-line";
