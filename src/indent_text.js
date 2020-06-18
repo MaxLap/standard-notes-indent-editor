@@ -1,3 +1,7 @@
+/**
+ * This file handles part of the editor which is related to parsing the text and applying markup
+ */
+
 (function(CodeMirror) {
 "use strict";
 

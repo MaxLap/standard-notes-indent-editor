@@ -17,8 +17,8 @@
     <link rel="stylesheet" media="all" href="dist/sn-codemirror-search/dialog/dialog.css">
   </head>
 
-  <body style="padding: 10px; box-sizing: border-box">
-    <div id="wrapper" style="border: 2px solid black; max-width: 1200px">
+  <body style="padding: 10px; box-sizing: border-box; max-width: 1200px">
+    <div id="wrapper" style="border: 2px solid black">
       <textarea id="code" name="code" style="height: 100%">
 # Indent editor
 This is a demo of the Indent Editor for Standard Notes.
@@ -70,8 +70,16 @@ When there are no https://, it tries to find addresses that have the common .com
 Lastly, you can ctrl+click on those links to open those pages in a new tab. Try it!
 
 # Paragraphs
+(This part about paragraph usually doesn't happen on mobile, because your screen is not large enough. Try it on a desktop / laptop!)
+
 You may have already noticed that lines that wrap don't go as far right as they could. The lines instead stop after around 50 characters. This avoids paragraph that are super large or long line followed by very few words, both harder to read. This usually has no effect on mobile because screen aren't as large. Also for that readability goal, lines that wrap have a little bit less space between the lines.
 You can see the little extra spacing between this line and the above paragraph.
+Note that lines that are not wrapping can end up longer than paragraphs. Depending on your screen, this line might be longer than the paragraph.
+-> This is useful if you mostly do lists with sometimes long lines.
+-> This avoids having a 2nd line with a single word; it will wrap a chunk of the line. Try adding words here until it warps!
+-> This can be changed in the setting
+
+**********-> Note that paragraphs' will be moved as a whole by indentation. The paragraph itself will have the same size as other ones. So this paragraph's right side is further to the right than the one that is a few lines above. You can try adding/removing some of the stars at the begining of this to see the whole paragraph moving with the indentation.
 
 # Code
 You can use `backticks` to have a piece of code in a line.
@@ -127,6 +135,32 @@ Now that you tried the editor, you can follow these instructions to install it i
 If you like it, please consider sponsoring the project on https://github.com/MaxLap/standard-notes-indent-editor.
 
 </textarea>
+      <button id="config-panel-toggle" style="position: absolute; right: 15px; top: 1px; z-index: 10" onclick="displayConfig()">
+        cfg
+      </button>
+      <div id="config-panel" style="display: none; position: absolute; top: 0px; bottom: 0px;">
+        Use monospace font for this note <br/>
+        <label><input type="radio" name="monospace" value="yes" onclick="changeMonospaceConfig('yes')"/> yes </label>
+        <label><input type="radio" name="monospace" value="no" onclick="changeMonospaceConfig('no')"/> no </label>
+        <label><input type="radio" name="monospace" value="default" onclick="changeMonospaceConfig('default')"/> default </label>
+
+        <br/><br/>
+
+        Allow non-wrapping lines to be longer for this note <br/>
+        <label><input type="radio" name="allow_longer_lines" value="yes" onclick="changeAllowLongerLinesConfig('yes')"/> yes </label>
+        <label><input type="radio" name="allow_longer_lines" value="no" onclick="changeAllowLongerLinesConfig('no')"/> no </label>
+        <label><input type="radio" name="allow_longer_lines" value="default" onclick="changeAllowLongerLinesConfig('default')"/> default </label>
+
+        <br/><br/>
+
+        Indent Editor is free, please consider supporting me! <a href="https://github.com/MaxLap/standard-notes-indent-editor">(Click sponsor)</a>
+
+        <br/><br/>
+
+        <button onclick="hideConfig()">
+          Close
+        </button>
+      </div>
     <div>
   </body>
 </html>

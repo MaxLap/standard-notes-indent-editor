@@ -530,3 +530,11 @@ body, html {
   color: var(--sn-stylekit-info-contrast-color) !important;
   background: var(--sn-stylekit-info-color) !important;
 }
+
+.CodeMirror.use-monospace-everywhere {
+  font-family: var(--sn-stylekit-monospace-font);
+}
+
+.CodeMirror.remove-longer-lines .CodeMirror-lines {
+  max-width: 50em;
+}

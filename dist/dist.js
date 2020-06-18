@@ -10528,10 +10528,17 @@ if (window) {
 ;(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-function IndentEditor(target_textarea) {
+/**
+ * This file handles part of the editor which is related to:
+ * * wrapping the text in a special way
+ * * keyboard shortcuts and click actions
+ */
+function IndentEditor(target_textarea, indent_editor_options) {
   var editor;
+  var self = this;
+  indent_editor_options = indent_editor_options || {};
 
-  function measureLineElement(elt) {
+  this.measureLineElement = function (elt) {
     var wrappingSpan = elt.firstElementChild;
     var finalSpan = document.createElement('span');
     elt.appendChild(finalSpan);
@@ -10567,9 +10574,9 @@ function IndentEditor(target_textarea) {
       indentWidth: indentWidth,
       textMustWrap: textMustWrap
     };
-  }
+  };
 
-  function selectionsToLineRanges(sels) {
+  this.selectionsToLineRanges = function (sels) {
     var lineRanges = [];
 
     for (var i = 0; i < sels.length; i++) {
@@ -10596,9 +10603,9 @@ function IndentEditor(target_textarea) {
     }
 
     return lineRanges;
-  }
+  };
 
-  function duplicate(cm) {
+  this.duplicate = function (cm) {
     var sels = cm.listSelections();
 
     for (var i = sels.length - 1; i >= 0; i--) {
@@ -10632,11 +10639,11 @@ function IndentEditor(target_textarea) {
         cm.replaceRange(content, start, start, "+input");
       }
     }
-  }
+  };
 
-  function moveSelectedLinesUp(cm) {
+  this.moveSelectedLinesUp = function (cm) {
     var sels = cm.listSelections();
-    var lineRanges = selectionsToLineRanges(sels);
+    var lineRanges = this.selectionsToLineRanges(sels);
     var nbSelsTouchingFirstLine = 0;
 
     if (lineRanges[0][0] == 0) {
@@ -10704,11 +10711,11 @@ function IndentEditor(target_textarea) {
     }
 
     cm.doc.setSelections(newSels);
-  }
+  };
 
-  function moveSelectedLinesDown(cm) {
+  this.moveSelectedLinesDown = function (cm) {
     var sels = cm.listSelections();
-    var lineRanges = selectionsToLineRanges(sels);
+    var lineRanges = this.selectionsToLineRanges(sels);
     var nbSelsTouchingLastLine = 0;
     var lastLineNumber = cm.doc.lastLine();
 
@@ -10777,9 +10784,9 @@ function IndentEditor(target_textarea) {
     }
 
     cm.doc.setSelections(newSels);
-  }
+  };
 
-  function setupEditor(target_textarea) {
+  this.setupEditor = function (target_textarea) {
     editor = CodeMirror.fromTextArea(target_textarea, {
       mode: "indent_text",
       lineWrapping: true,
@@ -10824,13 +10831,13 @@ function IndentEditor(target_textarea) {
         },
         "Home": "goLineLeftSmart",
         "End": "goLineRight",
-        "Ctrl-D": duplicate,
-        "Cmd-D": duplicate,
+        "Ctrl-D": this.duplicate.bind(this),
+        "Cmd-D": this.duplicate.bind(this),
         // Shift has to be first for some reason...
-        "Shift-Ctrl-Up": moveSelectedLinesUp,
-        "Shift-Cmd-Up": moveSelectedLinesUp,
-        "Shift-Ctrl-Down": moveSelectedLinesDown,
-        "Shift-Cmd-Down": moveSelectedLinesDown
+        "Shift-Ctrl-Up": this.moveSelectedLinesUp.bind(this),
+        "Shift-Cmd-Up": this.moveSelectedLinesUp.bind(this),
+        "Shift-Ctrl-Down": this.moveSelectedLinesDown.bind(this),
+        "Shift-Cmd-Down": this.moveSelectedLinesDown.bind(this)
       }
     }); // only use CodeMirror markselection when not in contenteditable
 
@@ -10873,10 +10880,11 @@ function IndentEditor(target_textarea) {
           e.preventDefault();
         }
       }
-    });
+    }); // This is the base padding in the css if I remember well
+
     var basePadding = 4;
     editor.on("renderLine", function (cm, line, elt) {
-      var measures = measureLineElement(elt);
+      var measures = self.measureLineElement(elt);
       var indentationWidth = measures.indentWidth;
       var scrollInfo = cm.getScrollInfo();
       var maxOff = scrollInfo.width - 150;
@@ -10893,11 +10901,18 @@ function IndentEditor(target_textarea) {
 
       if (measures.textMustWrap) {
         elt.className += " cm-line-is-wrapped";
-      }
+      } // Making the lines after the first have just the right indentation using padding.
+      // And making the first line back to where it would be by removing that padding.
+
 
       elt.style.textIndent = "-" + wrapOffset + "px";
       elt.style.paddingLeft = basePadding + wrapOffset + "px";
     });
+
+    if (indent_editor_options.monospace) {
+      this.setMonospaceNoRefresh(true);
+    }
+
     editor.refresh(); // Need to do refresh on the codemirror instance when there is resizing
     // This is necessary for to fix the max wrapping width in hte edge cases that it is necessary...
 
@@ -10910,14 +10925,48 @@ function IndentEditor(target_textarea) {
         editor.refresh();
       }, 1000);
     });
-  }
+  };
 
-  setupEditor(target_textarea);
-  return editor;
+  this.setupEditor(target_textarea);
+
+  this.setMonospaceNoRefresh = function (true_false) {
+    indent_editor_options.monospace = true_false;
+
+    if (true_false) {
+      this.editor.getWrapperElement().classList.add("use-monospace-everywhere");
+    } else {
+      this.editor.getWrapperElement().classList.remove("use-monospace-everywhere");
+    }
+  };
+
+  this.setMonospace = function (true_false) {
+    this.setMonospaceNoRefresh(true_false);
+    this.editor.refresh();
+  };
+
+  this.setAllowLongerLinesNoRefresh = function (true_false) {
+    indent_editor_options.allow_longer_lines = true_false;
+
+    if (true_false) {
+      this.editor.getWrapperElement().classList.remove("remove-longer-lines");
+    } else {
+      this.editor.getWrapperElement().classList.add("remove-longer-lines");
+    }
+  };
+
+  this.setAllowLongerLines = function (true_false) {
+    this.setAllowLongerLinesNoRefresh(true_false);
+    this.editor.refresh();
+  };
+
+  this.editor = editor;
 }
 
 ;
 ;
+/**
+* This file handles part of the editor which is related to parsing the text and applying markup
+*/
 
 (function (CodeMirror) {
   "use strict";
@@ -11131,13 +11180,23 @@ function IndentEditor(target_textarea) {
 })(CodeMirror);
 
 ;
+/**
+* This file handles the Standard Notes related stuff and config stuff:
+* * loading up the editor
+* * saving the node
+* * changing and saving settings
+*/
+
 document.addEventListener("DOMContentLoaded", function (event) {
   var componentManager;
-  var workingNote, clientData;
+  var workingNote;
   var lastValue, lastUUID;
-  var editor;
+  var editor, indent_editor;
   var ignoreTextChange = false;
   var initialLoad = true;
+  var clientData = {
+    monospace: 'default'
+  };
 
   function loadComponentManager() {
     var permissions = [{
@@ -11190,6 +11249,11 @@ document.addEventListener("DOMContentLoaded", function (event) {
     clientData = note.clientData;
 
     if (editor) {
+      if (clientData) {
+        indent_editor.setMonospaceNoRefresh(finalOptionMonospace());
+        indent_editor.setAllowLongerLinesNoRefresh(finalOptionAllowLongerLines());
+      }
+
       if (note.content.text !== lastValue) {
         ignoreTextChange = true;
         editor.getDoc().setValue(workingNote.content.text);
@@ -11204,7 +11268,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
   }
 
   function loadEditor() {
-    editor = IndentEditor(document.getElementById("code"));
+    indent_editor = new IndentEditor(document.getElementById("code"), finalOptions());
+    editor = indent_editor.editor;
+    window.editor = editor;
     editor.on("change", function () {
       if (ignoreTextChange) {
         return;
@@ -11213,6 +11279,131 @@ document.addEventListener("DOMContentLoaded", function (event) {
       save();
     });
   }
+
+  function finalOptions() {
+    return {
+      monospace: finalOptionMonospace()
+    };
+  }
+
+  function finalOptionMonospace() {
+    return finalOption('monospace', ['no', 'yes']);
+  }
+
+  function finalOptionAllowLongerLines() {
+    return finalOption('allow_longer_lines', ['yes', 'no']);
+  } // the first valid_values is used as default value
+
+
+  function finalOption(option_name, valid_values) {
+    var value = clientData[option_name];
+
+    if (!valid_values.includes(value)) {
+      value = chosenDefault(option_name, valid_values);
+    }
+
+    return yesNoToBool(value);
+  }
+
+  function chosenDefault(option_name, valid_values) {
+    if (componentManager && componentManager.componentData) {
+      var value = componentManager.componentDataValueForKey(option_name + "_default");
+
+      if (valid_values.includes(value)) {
+        return value;
+      } else {
+        return valid_values[0];
+      }
+    } else {
+      return valid_values[0];
+    }
+  }
+
+  function yesNoToBool(value) {
+    if (value == 'yes') {
+      return true;
+    } else if (value == 'no') {
+      return false;
+    } else {
+      throw 'Expected yes or no';
+    }
+  }
+
+  window.displayConfig = function () {
+    if (componentManager && componentManager.componentData && componentManager.componentDataValueForKey("monospace_default") == 'yes') {
+      document.querySelectorAll('[name="monospace_default"][value="yes"]')[0].checked = true;
+    } else {
+      // default is no
+      document.querySelectorAll('[name="monospace_default"][value="no"]')[0].checked = true;
+    }
+
+    if (clientData.monospace == 'yes') {
+      document.querySelectorAll('[name="monospace"][value="yes"]')[0].checked = true;
+    } else if (clientData.monospace == 'no') {
+      document.querySelectorAll('[name="monospace"][value="no"]')[0].checked = true;
+    } else {
+      document.querySelectorAll('[name="monospace"][value="default"]')[0].checked = true;
+    }
+
+    if (componentManager && componentManager.componentData && componentManager.componentDataValueForKey("allow_longer_lines_default") == 'no') {
+      document.querySelectorAll('[name="allow_longer_lines_default"][value="no"]')[0].checked = true;
+    } else {
+      // default is yes
+      document.querySelectorAll('[name="allow_longer_lines_default"][value="yes"]')[0].checked = true;
+    }
+
+    if (clientData.allow_longer_lines == 'yes') {
+      document.querySelectorAll('[name="allow_longer_lines"][value="yes"]')[0].checked = true;
+    } else if (clientData.allow_longer_lines == 'no') {
+      document.querySelectorAll('[name="allow_longer_lines"][value="no"]')[0].checked = true;
+    } else {
+      document.querySelectorAll('[name="allow_longer_lines"][value="default"]')[0].checked = true;
+    }
+
+    document.getElementById('config-panel').style.display = 'block';
+    editor.getWrapperElement().style.display = 'none';
+    document.getElementById('config-panel-toggle').style.display = 'none';
+  };
+
+  window.hideConfig = function () {
+    document.getElementById('config-panel').style.display = 'none';
+    editor.getWrapperElement().style.display = 'block';
+    document.getElementById('config-panel-toggle').style.display = 'inline';
+  };
+
+  window.changeMonospaceConfig = function (new_value) {
+    if (clientData) {
+      clientData.monospace = new_value;
+    }
+
+    indent_editor.setMonospace(finalOptionMonospace());
+    save();
+  };
+
+  window.changeAllowLongerLinesConfig = function (new_value) {
+    if (clientData) {
+      clientData.allow_longer_lines = new_value;
+    }
+
+    indent_editor.setAllowLongerLines(finalOptionAllowLongerLines());
+    save();
+  };
+
+  window.changeMonospaceDefaultConfig = function (new_value) {
+    if (componentManager) {
+      componentManager.setComponentDataValueForKey("monospace_default", new_value);
+    }
+
+    indent_editor.setMonospace(finalOptionMonospace());
+  };
+
+  window.changeAllowLongerLinesDefaultConfig = function (new_value) {
+    if (componentManager) {
+      componentManager.setComponentDataValueForKey("allow_longer_lines_default", new_value);
+    }
+
+    indent_editor.setAllowLongerLines(finalOptionAllowLongerLines());
+  };
 
   loadEditor();
   loadComponentManager();

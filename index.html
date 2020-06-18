@@ -19,6 +19,44 @@
   <body>
     <div id="wrapper">
       <textarea id="code" name="code"></textarea>
+      <button id="config-panel-toggle" style="position: absolute; right: 15px; top: 1px; z-index: 10" onclick="displayConfig()">
+        cfg
+      </button>
+      <div id="config-panel" style="display: none; position: absolute; top: 0px; bottom: 0px;">
+        Use monospace font for this note<br/>
+        <label><input type="radio" name="monospace" value="yes" onclick="changeMonospaceConfig('yes')"/> yes </label>
+        <label><input type="radio" name="monospace" value="no" onclick="changeMonospaceConfig('no')"/> no </label>
+        <label><input type="radio" name="monospace" value="default" onclick="changeMonospaceConfig('default')"/> default </label>
+
+        <br/><br/>
+
+        Use monospace font default (for notes you didn't select a specific choice) <br/>
+        <label><input type="radio" name="monospace_default" value="yes" onclick="changeMonospaceDefaultConfig('yes')"/> yes </label>
+        <label><input type="radio" name="monospace_default" value="no" onclick="changeMonospaceDefaultConfig('no')"/> no </label>
+
+        <br/><br/>
+
+        Allow non-wrapping lines to be longer for this note <br/>
+        <label><input type="radio" name="allow_longer_lines" value="yes" onclick="changeAllowLongerLinesConfig('yes')"/> yes </label>
+        <label><input type="radio" name="allow_longer_lines" value="no" onclick="changeAllowLongerLinesConfig('no')"/> no </label>
+        <label><input type="radio" name="allow_longer_lines" value="default" onclick="changeAllowLongerLinesConfig('default')"/> default </label>
+
+        <br/><br/>
+
+        Allow non-wrapping lines to be longer default (for notes you didn't select a specific choice) <br/>
+        <label><input type="radio" name="allow_longer_lines_default" value="yes" onclick="changeAllowLongerLinesDefaultConfig('yes')"/> yes </label>
+        <label><input type="radio" name="allow_longer_lines_default" value="no" onclick="changeAllowLongerLinesDefaultConfig('no')"/> no </label>
+
+        <br/><br/>
+
+        Indent Editor is free, please consider supporting me! <a href="https://github.com/MaxLap/standard-notes-indent-editor">(Click sponsor)</a>
+
+        <br/><br/>
+
+        <button onclick="hideConfig()">
+          Close
+        </button>
+      </div>
     <div>
 
   </body>
