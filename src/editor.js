@@ -224,7 +224,8 @@ function IndentEditor(target_textarea, indent_editor_options) {
                 new_indentation = new_indentation.replace(/[-*+>]/g, ' ');
               }
             } else {
-              var digits = /^\s*(\d+)\.\s+/.exec(prev_line);
+              // Need a space after the dot, or to reach the end of the line
+              var digits = /^\s*(\d+)\.($|\s+)/.exec(prev_line);
               if (digits) {
                 prev_line = prev_line.replace(/\d+/, parseInt(digits,10) + 1);
               }
