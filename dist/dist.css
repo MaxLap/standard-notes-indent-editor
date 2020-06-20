@@ -538,3 +538,11 @@ body, html {
 .CodeMirror.remove-longer-lines .CodeMirror-lines {
   max-width: 50em;
 }
+
+#config-panel {
+  color: var(--sn-stylekit-editor-foreground-color) !important;
+}
+
+#config-panel a {
+  color: var(--sn-stylekit-info-color) !important;
+}
