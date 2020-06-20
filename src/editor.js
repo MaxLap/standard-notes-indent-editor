@@ -211,26 +211,26 @@ function IndentEditor(target_textarea, indent_editor_options) {
             cm.replaceRange(cm.doc.lineSeparator(), sels[i].anchor, sels[i].head, "+input");
           }
 
+          var new_indentation;
           sels = cm.listSelections();
           for (var i = 0; i < sels.length; i++) {
             var state = tokens[i].state;
             var prev_line = cm.doc.getLine(sels[i].anchor.line - 1);
             if (state.inCodeBlock) {
-              var prev_indentation;
               if (state.codeBlockHasReadText) {
-                prev_indentation = /^\s*/.exec(prev_line)[0];
+                new_indentation = /^\s*/.exec(prev_line)[0];
               } else {
-                prev_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
-                prev_indentation = prev_indentation.replace(/[-*+>]/g, ' ');
+                new_indentation = /^[-*+>\s]*/.exec(prev_line)[0];
+                new_indentation = new_indentation.replace(/[-*+>]/g, ' ');
               }
             } else {
               var digits = /^\s*(\d+)\.\s+/.exec(prev_line);
               if (digits) {
                 prev_line = prev_line.replace(/\d+/, parseInt(digits,10) + 1);
               }
-              prev_indentation = /^\s*(\d+)\.\s+|[-*+>\s]*/.exec(prev_line)[0];
+              new_indentation = /^\s*(\d+)\.\s+|[-*+>\s]*/.exec(prev_line)[0];
             }
-            cm.replaceRange(prev_indentation, sels[i].anchor, sels[i].head, "+input");
+            cm.replaceRange(new_indentation, sels[i].anchor, sels[i].head, "+input");
           }
           cm.scrollIntoView();
         },
