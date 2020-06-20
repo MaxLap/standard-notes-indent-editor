@@ -11081,7 +11081,7 @@ function IndentEditor(target_textarea, indent_editor_options) {
         if (state.foundBacktick) {
           state.foundBacktick = false;
 
-          if (stream.match(/^```\s*$/, true)) {
+          if (stream.match(/^```\S*\s*$/, true)) {
             state.inCodeBlock = true;
             state.codeBlockHasReadText = false;
             state.codeBlockLeadingSpaceWidth = state.leadingSpaceContent.length;

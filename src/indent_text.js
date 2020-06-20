@@ -101,7 +101,7 @@ CodeMirror.defineMode("indent_text", function(cmCfg, modeCfg) {
 
       if (state.foundBacktick) {
         state.foundBacktick = false;
-        if (stream.match(/^```\s*$/, true)) {
+        if (stream.match(/^```\S*\s*$/, true)) {
           state.inCodeBlock = true;
           state.codeBlockHasReadText = false;
           state.codeBlockLeadingSpaceWidth = state.leadingSpaceContent.length;
