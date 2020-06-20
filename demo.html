@@ -145,6 +145,13 @@ If you like it, please consider sponsoring the project on https://github.com/Max
         <label><input type="radio" name="monospace" value="default" onclick="changeMonospaceConfig('default')"/> default </label>
 
         <br/><br/>
+        <div style="display: none">
+          Use monospace font default (for notes you didn't select a specific choice) <br/>
+          <label><input type="radio" name="monospace_default" value="yes" onclick="changeMonospaceDefaultConfig('yes')"/> yes </label>
+          <label><input type="radio" name="monospace_default" value="no" onclick="changeMonospaceDefaultConfig('no')"/> no </label>
+
+          <br/><br/>
+        </div>
 
         Allow non-wrapping lines to be longer for this note <br/>
         <label><input type="radio" name="allow_longer_lines" value="yes" onclick="changeAllowLongerLinesConfig('yes')"/> yes </label>
@@ -152,6 +159,14 @@ If you like it, please consider sponsoring the project on https://github.com/Max
         <label><input type="radio" name="allow_longer_lines" value="default" onclick="changeAllowLongerLinesConfig('default')"/> default </label>
 
         <br/><br/>
+
+        <div style="display: none">
+          Allow non-wrapping lines to be longer default (for notes you didn't select a specific choice) <br/>
+          <label><input type="radio" name="allow_longer_lines_default" value="yes" onclick="changeAllowLongerLinesDefaultConfig('yes')"/> yes </label>
+          <label><input type="radio" name="allow_longer_lines_default" value="no" onclick="changeAllowLongerLinesDefaultConfig('no')"/> no </label>
+
+          <br/><br/>
+        </div>
 
         Indent Editor is free, please consider supporting me! <a href="https://github.com/MaxLap/standard-notes-indent-editor">(Click sponsor)</a>
 
