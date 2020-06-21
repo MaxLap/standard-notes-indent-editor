@@ -18,6 +18,7 @@ The [demo](https://maxlap.github.io/standard-notes-indent-editor/demo.html) show
   * Lines wrap until after those characters too.
   * Pressing `Enter` copies the *->+ along with the spaces.
   * Indentation uses a fixed-width font, so it always align nicely.
+* Numbered lists (lines starting with 1. then 2.) are also considered indentation, and numbers will auto-increment on "Enter".
 * Lines that wrap are shown as paragraph of around 50 characters wide. This keeps them from being super large and hard to read
 * Lines that wrap are slightly closer together vertically.
 * Lines starting with a number sign (#) are headers, shown as bold and bigger text.
