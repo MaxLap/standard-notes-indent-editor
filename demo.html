@@ -146,7 +146,7 @@ Now that you tried the editor, you can follow these instructions to install it i
 If you like it, please consider sponsoring the project on https://github.com/MaxLap/standard-notes-indent-editor.
 
 </textarea>
-      <button id="config-panel-toggle" style="position: absolute; right: 15px; top: 1px; z-index: 10" onclick="displayConfig()">
+      <button id="config-panel-toggle" style="position: absolute; right: 15px; top: 1px; z-index: 10" onclick="displayConfigPanel()">
         cfg
       </button>
       <div id="config-panel" style="display: none; position: absolute; top: 0px; bottom: 0px;">
@@ -179,11 +179,26 @@ If you like it, please consider sponsoring the project on https://github.com/Max
           <br/><br/>
         </div>
 
+        Color headers (<span class="colored-like-header">would be this color</span>) <br/>
+        <label><input type="radio" name="color_headers" value="yes" onclick="changeColorHeadersConfig('yes')"/> yes </label>
+        <label><input type="radio" name="color_headers" value="no" onclick="changeColorHeadersConfig('no')"/> no </label>
+        <label><input type="radio" name="color_headers" value="default" onclick="changeColorHeadersConfig('default')"/> default </label>
+
+        <br/><br/>
+
+        <div style="display: none">
+          Color headers default (for notes you didn't select a specific choice) <br/>
+          <label><input type="radio" name="color_headers_default" value="yes" onclick="changeColorHeadersDefaultConfig('yes')"/> yes </label>
+          <label><input type="radio" name="color_headers_default" value="no" onclick="changeColorHeadersDefaultConfig('no')"/> no </label>
+
+          <br/><br/>
+        </div>
+
         Indent Editor is free, please consider supporting me! <a href="https://github.com/MaxLap/standard-notes-indent-editor">(Click sponsor)</a>
 
         <br/><br/>
 
-        <button onclick="hideConfig()">
+        <button onclick="hideConfigPanel()">
           Close
         </button>
       </div>

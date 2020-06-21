@@ -67,8 +67,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     if(editor) {
       if(clientData) {
-        indent_editor.setMonospaceNoRefresh(finalOptionMonospace());
         indent_editor.setAllowLongerLinesNoRefresh(finalOptionAllowLongerLines());
+        indent_editor.setColorHeaders(finalOptionColorHeaders());
+        indent_editor.setMonospaceNoRefresh(finalOptionMonospace());
       }
 
       if(note.content.text !== lastValue) {
@@ -98,16 +99,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   function finalOptions() {
     return {
+      allow_longer_lines: finalOptionAllowLongerLines(),
+      color_headers: finalOptionColorHeaders(),
       monospace: finalOptionMonospace(),
     }
   }
 
-  function finalOptionMonospace() {
-    return finalOption('monospace', ['no', 'yes'])
-  }
-
   function finalOptionAllowLongerLines() {
     return finalOption('allow_longer_lines', ['yes', 'no'])
+  }
+
+  function finalOptionColorHeaders() {
+    return finalOption('color_headers', ['yes', 'no'])
+  }
+
+  function finalOptionMonospace() {
+    return finalOption('monospace', ['no', 'yes'])
   }
 
   // the first valid_values is used as default value
@@ -143,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
   }
 
-  window.displayConfig = function() {
+  window.displayConfigPanel = function() {
     if (componentManager && componentManager.componentData && componentManager.componentDataValueForKey("monospace_default") == 'yes') {
       document.querySelectorAll('[name="monospace_default"][value="yes"]')[0].checked = true;
     } else {
@@ -173,24 +180,31 @@ document.addEventListener("DOMContentLoaded", function(event) {
     } else {
       document.querySelectorAll('[name="allow_longer_lines"][value="default"]')[0].checked = true;
     }
+    
+    if (componentManager && componentManager.componentData && componentManager.componentDataValueForKey("color_headers_default") == 'no') {
+      document.querySelectorAll('[name="color_headers_default"][value="no"]')[0].checked = true;
+    } else {
+      // default is yes
+      document.querySelectorAll('[name="color_headers_default"][value="yes"]')[0].checked = true;
+    }
 
+    if (clientData.color_headers == 'yes') {
+      document.querySelectorAll('[name="color_headers"][value="yes"]')[0].checked = true;
+    } else if (clientData.color_headers == 'no') {
+      document.querySelectorAll('[name="color_headers"][value="no"]')[0].checked = true;
+    } else {
+      document.querySelectorAll('[name="color_headers"][value="default"]')[0].checked = true;
+    }
+    
     document.getElementById('config-panel').style.display = 'block';
     editor.getWrapperElement().style.display = 'none';
     document.getElementById('config-panel-toggle').style.display = 'none';
   }
 
-  window.hideConfig = function() {
+  window.hideConfigPanel = function() {
     document.getElementById('config-panel').style.display = 'none';
     editor.getWrapperElement().style.display = 'block';
     document.getElementById('config-panel-toggle').style.display = 'inline';
-  }
-
-  window.changeMonospaceConfig = function(new_value) {
-    if (clientData) {
-      clientData.monospace = new_value;
-    }
-    indent_editor.setMonospace(finalOptionMonospace());
-    save();
   }
 
   window.changeAllowLongerLinesConfig = function(new_value) {
@@ -201,11 +215,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
     save();
   }
 
-  window.changeMonospaceDefaultConfig = function(new_value) {
-    if (componentManager) {
-      componentManager.setComponentDataValueForKey("monospace_default", new_value);
+  window.changeColorHeadersConfig = function(new_value) {
+    if (clientData) {
+      clientData.color_headers = new_value;
+    }
+    indent_editor.setColorHeaders(finalOptionColorHeaders());
+    save();
+  }
+
+  window.changeMonospaceConfig = function(new_value) {
+    if (clientData) {
+      clientData.monospace = new_value;
     }
     indent_editor.setMonospace(finalOptionMonospace());
+    save();
   }
 
   window.changeAllowLongerLinesDefaultConfig = function(new_value) {
@@ -213,6 +236,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
       componentManager.setComponentDataValueForKey("allow_longer_lines_default", new_value);
     }
     indent_editor.setAllowLongerLines(finalOptionAllowLongerLines());
+  }
+
+  window.changeColorHeadersDefaultConfig = function(new_value) {
+    if (componentManager) {
+      componentManager.setComponentDataValueForKey("color_headers_default", new_value);
+    }
+    indent_editor.setColorHeaders(finalOptionColorHeaders());
+  }
+
+  window.changeMonospaceDefaultConfig = function(new_value) {
+    if (componentManager) {
+      componentManager.setComponentDataValueForKey("monospace_default", new_value);
+    }
+    indent_editor.setMonospace(finalOptionMonospace());
   }
 
   loadEditor();

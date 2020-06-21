@@ -84,6 +84,10 @@ body, html {
     font-size: $font-size;
   }
 
+  .cfg-color-headers .cm-header-#{$number} {
+    color: var(--sn-stylekit-info-color);
+  }
+
   .cm-formatting-header-#{$number} {
     opacity: 0.3;
     font-size: 90%;
@@ -98,6 +102,10 @@ body, html {
 @include make-cm-header(2, 120%);
 @include make-cm-header(3, 100%);
 @include make-cm-header(4, 100%);
+
+.colored-like-header {
+  color: var(--sn-stylekit-info-color);
+}
 
 .CodeMirror .blank-line {
   line-height: 0.4em !important;

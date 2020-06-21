@@ -424,6 +424,10 @@ body, html {
   font-size: 135%;
 }
 
+.cfg-color-headers .cm-header-1 {
+  color: var(--sn-stylekit-info-color);
+}
+
 .cm-formatting-header-1 {
   opacity: 0.3;
   font-size: 90%;
@@ -436,6 +440,10 @@ body, html {
 .cm-header-2 {
   font-weight: bold;
   font-size: 120%;
+}
+
+.cfg-color-headers .cm-header-2 {
+  color: var(--sn-stylekit-info-color);
 }
 
 .cm-formatting-header-2 {
@@ -452,6 +460,10 @@ body, html {
   font-size: 100%;
 }
 
+.cfg-color-headers .cm-header-3 {
+  color: var(--sn-stylekit-info-color);
+}
+
 .cm-formatting-header-3 {
   opacity: 0.3;
   font-size: 90%;
@@ -466,6 +478,10 @@ body, html {
   font-size: 100%;
 }
 
+.cfg-color-headers .cm-header-4 {
+  color: var(--sn-stylekit-info-color);
+}
+
 .cm-formatting-header-4 {
   opacity: 0.3;
   font-size: 90%;
@@ -473,6 +489,10 @@ body, html {
 .cm-formatting-header-4::after {
   content: '';
   font-size: 111.1111111111%;
+}
+
+.colored-like-header {
+  color: var(--sn-stylekit-info-color);
 }
 
 .CodeMirror .blank-line {

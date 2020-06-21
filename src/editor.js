@@ -195,7 +195,7 @@ function IndentEditor(target_textarea, indent_editor_options) {
   }
 
   this.setupEditor = function(target_textarea) {
-    editor = CodeMirror.fromTextArea(target_textarea, {
+    this.editor = editor = CodeMirror.fromTextArea(target_textarea, {
       mode: "indent_text",
       lineWrapping: true,
       tabSize: 2,
@@ -315,9 +315,9 @@ function IndentEditor(target_textarea, indent_editor_options) {
       elt.style.paddingLeft = (basePadding + wrapOffset) + "px";
     });
 
-    if (indent_editor_options.monospace) {
-      this.setMonospaceNoRefresh(true)
-    }
+    this.setAllowLongerLinesNoRefresh(!!indent_editor_options.allow_longer_lines)
+    this.setColorHeaders(!!indent_editor_options.color_headers)
+    this.setMonospaceNoRefresh(!!indent_editor_options.monospace)
 
     editor.refresh();
 
@@ -330,21 +330,6 @@ function IndentEditor(target_textarea, indent_editor_options) {
       clearTimeout(resize_timeout_handle);
       resize_timeout_handle = setTimeout(function() { editor.refresh(); }, 1000)
     });
-  }
-  this.setupEditor(target_textarea)
-
-  this.setMonospaceNoRefresh = function(true_false) {
-    indent_editor_options.monospace = true_false;
-    if (true_false) {
-      this.editor.getWrapperElement().classList.add("use-monospace-everywhere");
-    } else {
-      this.editor.getWrapperElement().classList.remove("use-monospace-everywhere");
-    }
-  }
-
-  this.setMonospace = function(true_false) {
-    this.setMonospaceNoRefresh(true_false);
-    this.editor.refresh();
   }
 
   this.setAllowLongerLinesNoRefresh = function(true_false) {
@@ -361,5 +346,29 @@ function IndentEditor(target_textarea, indent_editor_options) {
     this.editor.refresh();
   }
 
-  this.editor = editor;
+  this.setColorHeaders = function(true_false) {
+    indent_editor_options.color_headers = true_false;
+    if (true_false) {
+      this.editor.getWrapperElement().classList.add("cfg-color-headers");
+    } else {
+      this.editor.getWrapperElement().classList.remove("cfg-color-headers");
+    }
+  }
+
+  this.setMonospaceNoRefresh = function(true_false) {
+    indent_editor_options.monospace = true_false;
+    if (true_false) {
+      this.editor.getWrapperElement().classList.add("use-monospace-everywhere");
+    } else {
+      this.editor.getWrapperElement().classList.remove("use-monospace-everywhere");
+    }
+  }
+
+  this.setMonospace = function(true_false) {
+    this.setMonospaceNoRefresh(true_false);
+    this.editor.refresh();
+  }
+
+
+  this.setupEditor(target_textarea)
 };
