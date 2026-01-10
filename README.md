@@ -1,3 +1,7 @@
+### Abandonned / Unmaintained
+
+I haven't used this nor Standard Notes for more than 4 years. If you encouter a problem, feel free to fork and try to fix it yourself, but I will not be doing any fix / releases.
+
 ### Standard Notes Indent Editor
 
 This is a text editor for the encrypted note taking app https://standardnotes.org/.
